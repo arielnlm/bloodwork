@@ -394,6 +394,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyBody2D: {fileID: 2580412622324773095}
+  _playerBody2D: {fileID: 0}
   _idleTime: 1
   _speed: 5
   chaseSpeed: 0

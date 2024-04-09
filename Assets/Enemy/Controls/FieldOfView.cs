@@ -6,22 +6,22 @@ using UnityEngine;
 public class FieldOfView : MonoBehaviour
 {
     [Range(0, 50)][SerializeField] private float _radius = 5f;
-    [Range(1, 360)][SerializeField] private float _angle = 45f;
+    [Range(0, 360)][SerializeField] private float _defaultAngle = 45f;
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private LayerMask _obstructionLayer;
     private GameObject _playerRef;
 
     public bool directionRight = true;
 
-    
+    private float angle;
 
     public bool canSeePLayer {  get; private set; }
 
     // Start is called before the first frame update
     void Start()
     {
+        angle = _defaultAngle;
         _playerRef = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log(_playerRef);
         StartCoroutine(FOVCheckForPlayer());
     }
 
@@ -82,8 +82,8 @@ public class FieldOfView : MonoBehaviour
         Gizmos.color = Color.white;
         UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, _radius);
 
-        Vector3 angle01 = DirectionFromAngle(-transform.eulerAngles.z, -_angle / 2);
-        Vector3 angle02 = DirectionFromAngle(-transform.eulerAngles.z, _angle / 2);
+        Vector3 angle01 = DirectionFromAngle(-transform.eulerAngles.z, -angle / 2);
+        Vector3 angle02 = DirectionFromAngle(-transform.eulerAngles.z, angle / 2);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position, transform.position + angle01 * _radius);
         Gizmos.DrawLine(transform.position, transform.position + angle02 * _radius);
@@ -93,6 +93,16 @@ public class FieldOfView : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, _playerRef.transform.position);
         }
+    }
+
+    public void ChaseMode()
+    {
+        angle = 360;
+    }
+
+    public void SearchMode()
+    {
+        angle = _defaultAngle;
     }
 
     private Vector2 DirectionFromAngle(float eulerY, float angleInDegrees)
@@ -107,6 +117,6 @@ public class FieldOfView : MonoBehaviour
     private bool FindAngle(Vector2 directionToTarget)
     {
         int num = directionRight ? 1 : -1;
-        return Vector2.Angle(num * transform.right, directionToTarget) < _angle / 2;
+        return Vector2.Angle(num * transform.right, directionToTarget) < angle / 2;
     }
 }
