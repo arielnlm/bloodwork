@@ -396,8 +396,9 @@ MonoBehaviour:
   _enemyBody2D: {fileID: 2580412622324773095}
   _playerBody2D: {fileID: 0}
   _idleTime: 1
-  _speed: 5
-  chaseSpeed: 0
+  _idleSearch: 3.27
+  _searchSpeed: 4
+  chaseSpeed: 7
   _maxLeft: {fileID: 2580412621784750185}
   _maxRight: {fileID: 2580412621456301442}
   fieldOfView: {fileID: 2580412622324773090}
@@ -413,8 +414,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74e6683f375455a4db61725f6b1bac4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 13.7
-  _angle: 90
+  _radius: 11.1
+  _defaultAngle: 45
   _targetLayer:
     serializedVersion: 2
     m_Bits: 64

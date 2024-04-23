@@ -737,8 +737,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2580412622324773091, guid: 41202875e67170f4191b37cd920c3beb, type: 3}
+      propertyPath: chaseSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580412622324773091, guid: 41202875e67170f4191b37cd920c3beb, type: 3}
       propertyPath: _idleSearch
       value: 0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580412622324773091, guid: 41202875e67170f4191b37cd920c3beb, type: 3}
+      propertyPath: _searchSpeed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2580412622324773091, guid: 41202875e67170f4191b37cd920c3beb, type: 3}
       propertyPath: _playerBody2D
