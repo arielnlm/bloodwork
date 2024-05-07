@@ -136,7 +136,7 @@ public class EnemyShooterMovement : MonoBehaviour
     private void ChangeDirection()
     {
         fieldOfView.directionRight = !fieldOfView.directionRight;
-
+        _enemyBody2D.transform.localScale *= new Vector2(-1, 1);
         UpdateSpeed(_speed);
         _currentWaitTime = _idleTime;
     }
