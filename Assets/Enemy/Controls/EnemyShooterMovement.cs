@@ -14,7 +14,12 @@ public class EnemyShooterMovement : MonoBehaviour
     [SerializeField] private float _searchSpeed;
 
     [Header("Enemy Shooting")]
-    [SerializeField] private float _timePassToShoot;
+    [SerializeField] private GameObject _bulletGameObject;
+    [SerializeField] private Transform _gunTranform;
+    [Range(1, 5)][SerializeField] private float _timePassToShoot;
+    [SerializeField] private float _bulletSpeed;
+    [Range(0, 1)][SerializeField] private float timeToReact;
+    [SerializeField] private GameObject warning;
 
     [Header("Enemy Movement Range")]
     [SerializeField] private Rigidbody2D _maxLeft;
@@ -25,6 +30,7 @@ public class EnemyShooterMovement : MonoBehaviour
     private float _currentSearchWaitTime = 0;
     private EnemyMode _enemyMode = EnemyMode.RegularSearch;
     private float _speed;
+    private float _timePass;
 
     // Start is called before the first frame update
     void Start()
@@ -40,18 +46,17 @@ public class EnemyShooterMovement : MonoBehaviour
 
         switch (_enemyMode)
         {
-            case EnemyMode.ShootPlayer: ShootPlayer(); break;
+            case EnemyMode.FoundPlayer: FoundPlayer(); break;
             case EnemyMode.LostPlayer: LostPlayer(); break;
             case EnemyMode.RegularSearch: RegularSearch(); break;
         }
     }
 
 
-    private void ShootPlayer()
+    private void FoundPlayer()
     {
         float range = _playerBody2D.position.x - _enemyBody2D.position.x;
         bool playerIsRight = range > 0;
-        float distanceBetween = Math.Abs(range);
 
         if (!fieldOfView.canSeePLayer)
         {
@@ -64,6 +69,28 @@ public class EnemyShooterMovement : MonoBehaviour
         {
             ChangeDirection();
         }
+
+        if (_timePass < 0)
+        {
+            Shoot();
+            warning.SetActive(false);
+            _timePass = _timePassToShoot;
+            return;
+        }
+
+        if (_timePass < timeToReact)
+        {
+            warning.SetActive(true);
+        }
+        _timePass -= Time.deltaTime;
+    }
+
+    private void Shoot()
+    {
+        _bulletGameObject.SetActive(true);
+        _bulletGameObject.GetComponent<Rigidbody2D>().position = _gunTranform.position;
+        Vector2 direction = _playerBody2D.position - _enemyBody2D.position;
+        _bulletGameObject.GetComponent<Rigidbody2D>().velocity = direction * _bulletSpeed;
     }
 
     private void LostPlayer()
@@ -117,12 +144,14 @@ public class EnemyShooterMovement : MonoBehaviour
     private void startShooting()
     {
         _speed = 0;
+        _timePass = _timePassToShoot;
         UpdateSpeed(_speed);
         fieldOfView.ChaseMode();
-        _enemyMode = EnemyMode.ShootPlayer;
+        _enemyMode = EnemyMode.FoundPlayer;
     }
     private void stopShooting()
     {
+        warning.SetActive(false);
         _speed = _searchSpeed;
         UpdateSpeed(_speed);
         fieldOfView.SearchMode();
@@ -137,9 +166,10 @@ public class EnemyShooterMovement : MonoBehaviour
         _enemyBody2D.velocity = new Vector2(fieldOfView.directionRight ? speed : -speed, _enemyBody2D.velocity.y);
     }
 
+
     private enum EnemyMode
     {
-        ShootPlayer,
+        FoundPlayer,
         LostPlayer,
         RegularSearch
 
