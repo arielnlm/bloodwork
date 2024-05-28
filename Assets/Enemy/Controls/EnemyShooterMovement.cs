@@ -15,7 +15,7 @@ public class EnemyShooterMovement : MonoBehaviour
 
     [Header("Enemy Shooting")]
     [SerializeField] private GameObject _bulletGameObject;
-    [SerializeField] private Transform _gunTranform;
+    [SerializeField] private Transform _gunTransform;
     [Range(1, 5)][SerializeField] private float _timePassToShoot;
     [SerializeField] private float _bulletSpeed;
     [Range(0, 1)][SerializeField] private float timeToReact;
@@ -88,8 +88,8 @@ public class EnemyShooterMovement : MonoBehaviour
     private void Shoot()
     {
         _bulletGameObject.SetActive(true);
-        _bulletGameObject.GetComponent<Rigidbody2D>().position = _gunTranform.position;
-        Vector2 direction = _playerBody2D.position - _enemyBody2D.position;
+        _bulletGameObject.GetComponent<Rigidbody2D>().position = _gunTransform.position;
+        Vector2 direction = _playerBody2D.position - new Vector2(_gunTransform.position.x, _gunTransform.position.y);
         _bulletGameObject.GetComponent<Rigidbody2D>().velocity = direction * _bulletSpeed;
     }
 

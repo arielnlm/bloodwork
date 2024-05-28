@@ -20,6 +20,8 @@ namespace TarodevController
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
 
+        [SerializeField] private PhysicsMaterial2D _highFrictionMat;
+
         #region Interface
 
         public Vector2 FrameInput => _frameInput.Move;
@@ -77,8 +79,26 @@ namespace TarodevController
             ApplyMovement();
         }
 
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("stairs"))
+            {
+                GetComponent<CapsuleCollider2D>().sharedMaterial = _highFrictionMat;
+                Debug.Log("FRICTION SETIIII");
+            }
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            if (collision.gameObject.CompareTag("stairs"))
+            {
+                GetComponent<CapsuleCollider2D>().sharedMaterial = null;
+                Debug.Log("FRICTION SETIIII2");
+            }
+        }
+
         #region Collisions
-        
+
         private float _frameLeftGrounded = float.MinValue;
         private bool _grounded;
 

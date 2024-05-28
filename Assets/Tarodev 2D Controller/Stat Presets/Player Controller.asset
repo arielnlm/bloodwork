@@ -28,5 +28,5 @@ MonoBehaviour:
   MaxFallSpeed: 40
   FallAcceleration: 110
   JumpEndEarlyGravityModifier: 3
-  CoyoteFrames: 7
-  JumpBufferFrames: 7
+  CoyoteTime: 0.15
+  JumpBuffer: 0.2
