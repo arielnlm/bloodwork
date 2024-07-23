@@ -909,6 +909,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1544650614272011804, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1544650614272011804, guid: 88097b566ad1fdd489d7ee77465b57aa, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -1103,6 +1107,10 @@ PrefabInstance:
     - target: {fileID: 8832836765535519848, guid: 6fcc1043d9c2e2f4485a67a8dc31d7a4, type: 3}
       propertyPath: m_Name
       value: EnemyShooterProfile
+      objectReference: {fileID: 0}
+    - target: {fileID: 8832836765535519848, guid: 6fcc1043d9c2e2f4485a67a8dc31d7a4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8832836765535519849, guid: 6fcc1043d9c2e2f4485a67a8dc31d7a4, type: 3}
       propertyPath: m_RootOrder
