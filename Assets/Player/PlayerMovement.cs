@@ -14,7 +14,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce = 5f;
     [SerializeField] float maxHoldOfJump = 0.5f;
     [SerializeField] LayerMask groundLayer;
+    [SerializeField] float coyoteTime = 0.2f;
 
+    private float coyoteTimerCounter = 0f;
     private float _direction;
     private bool _jumping = false;
     private float _timer = 0f;
@@ -50,8 +52,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && CheckIsPlayerOnGround())
+        bool isOnGround = CheckIsPlayerOnGround();
+
+        if (isOnGround)
         {
+            coyoteTimerCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimerCounter -= Time.deltaTime;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && (isOnGround || coyoteTimerCounter > 0))
+        {
+            coyoteTimerCounter = 0f;
             _jumping = true;
             _timer = 0;
         }
