@@ -379,7 +379,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633990590}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.64, y: 1.56, z: 0}
+  m_LocalPosition: {x: -2.13, y: 1.35, z: 0}
   m_LocalScale: {x: 2.6225584, y: 0.5658, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -490,7 +490,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 744206870}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.61, y: 1.66, z: 0}
+  m_LocalPosition: {x: 5.97, y: 1.48, z: 0}
   m_LocalScale: {x: 2.6225584, y: 0.5658, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -577,7 +577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.12, y: 1.37, z: -0.009554825}
+  m_LocalPosition: {x: 2.065, y: 1.347, z: -0.009554825}
   m_LocalScale: {x: 2.5086, y: 2.5086, z: 2.5086}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -645,27 +645,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 943575317}
-  feet: {fileID: 1806118442}
+  feet: {fileID: 1806118441}
   speed: 5
   jumpForce: 4
   maxHoldOfJump: 0.2
-  filter:
-    useTriggers: 0
-    useLayerMask: 0
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 0
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
+  coyoteTime: 0.1
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,8 +789,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1806118441}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0039, y: 0.0118, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 1}
+  m_LocalPosition: {x: 0.00073, y: -0.06207, z: 0}
+  m_LocalScale: {x: 0.8553153, y: 0.16934331, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 943575316}
@@ -819,10 +806,10 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0068991296, y: -0.07714743}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -833,7 +820,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.124222524, y: 0.01645787}
+  m_Size: {x: 0.12, y: 0.1}
   m_EdgeRadius: 0
 --- !u!1 &1840579954
 GameObject:
