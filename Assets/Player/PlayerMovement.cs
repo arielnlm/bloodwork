@@ -7,18 +7,22 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody2D player;
-    [SerializeField] Transform feet;
+    [SerializeField] GameObject feet;
     [SerializeField] float speed;
-    [SerializeField] LayerMask groundLayer;
+
+    [Header("Jumping")]
     [SerializeField] float jumpForce = 5f;
+    [SerializeField] float maxHoldOfJump = 0.5f;
+    [SerializeField] LayerMask groundLayer;
 
     private float _direction;
-    private bool _wantsToJump = false;
-    private int _num = 0;
+    private bool _jumping = false;
+    private float _timer = 0f;
+    BoxCollider2D _feetBoxCollider;
     // Start is called before the first frame update
     void Start()
     {
-
+        _feetBoxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
@@ -29,25 +33,37 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         player.velocity = new Vector2(_direction * speed, player.velocity.y);
 
-        if (_wantsToJump )
+        if (_jumping )
         {
             player.velocity = new Vector2(player.velocity.x, jumpForce);
-            _wantsToJump = false;
         }
     }
 
     private bool CheckIsPlayerOnGround()
-    {
-        return Physics2D.OverlapCircle(feet.position, 0.4f, groundLayer);
+    { 
+        return Physics2D.OverlapBox((Vector2)feet.transform.position + _feetBoxCollider.offset, _feetBoxCollider.size, 0, groundLayer);
     }
+
 
     private void HandleJump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && CheckIsPlayerOnGround())
         {
-            _wantsToJump = true;
+            _jumping = true;
+            _timer = 0;
+        }
+
+        if (_jumping)
+        {
+            _timer += Time.deltaTime;
+
+            if (Input.GetKeyUp(KeyCode.Space) || _timer > maxHoldOfJump)
+            {
+                _jumping = false;
+            }
         }
     }
 
