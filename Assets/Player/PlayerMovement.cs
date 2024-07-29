@@ -14,17 +14,25 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jumping")]
     [SerializeField] GameObject feet;
     [SerializeField] float jumpForce = 5f;
-    [SerializeField] float maxHoldOfJump = 0.5f;
     [SerializeField] LayerMask groundLayer;
+
+    [Header("Special Jumping Techs")]
+    [SerializeField] float holdJumpTime = 0.5f;
     [SerializeField] float coyoteTime = 0.2f;
     [SerializeField] float fallDownGravitiy = 3; // make gravitiy stronger when falling down
+    [SerializeField] float jumpBufferTime = 0.2f;
 
-    private float coyoteTimerCounter = 0f;
-    private float _direction;
+    //Jumping
     private bool _jumping = false;
-    private float _timer = 0f;
     BoxCollider2D _feetBoxCollider;
     private float _origingravity;
+    private float _direction;
+
+    //Jumping techs
+    private float _coyoteTimeCounter = 0f;
+    private float _holdJumpTimeCounter = 0f;
+    private float _jumpBufferTimeCounter = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,20 +59,22 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isOnGround = CheckIsPlayerOnGround();
 
-        coyoteTimerCounter = isOnGround ? coyoteTime : coyoteTimerCounter - Time.deltaTime;
+        _coyoteTimeCounter = isOnGround ? coyoteTime : _coyoteTimeCounter - Time.deltaTime;
+        _jumpBufferTimeCounter = Input.GetKeyDown(KeyCode.Space) ? jumpBufferTime : _jumpBufferTimeCounter - Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Space) && (isOnGround || coyoteTimerCounter > 0))
+        if ((Input.GetKeyDown(KeyCode.Space) || _jumpBufferTimeCounter > 0f ) && (isOnGround || _coyoteTimeCounter > 0))
         {
-            coyoteTimerCounter = 0f;
+            _coyoteTimeCounter = 0f;
             _jumping = true;
-            _timer = 0;
+            _holdJumpTimeCounter = 0;
+            _jumpBufferTimeCounter = 0f;
         }
 
         if (_jumping)
         {
-            _timer += Time.deltaTime;
+            _holdJumpTimeCounter += Time.deltaTime;
 
-            if (Input.GetKeyUp(KeyCode.Space) || _timer > maxHoldOfJump)
+            if (Input.GetKeyUp(KeyCode.Space) || _holdJumpTimeCounter > holdJumpTime)
             {
                 _jumping = false;
             }
