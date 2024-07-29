@@ -9,7 +9,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Rigidbody2D player;
 
     [Header("Movement Speed")]
-    [SerializeField] float speed;
+    [SerializeField] float maxSpeed;
+    [SerializeField] float accelaration;
+    [SerializeField] float deceleration;
 
     [Header("Jumping")]
     [SerializeField] GameObject feet;
@@ -22,10 +24,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float fallDownGravitiy = 3; // make gravitiy stronger when falling down
     [SerializeField] float jumpBufferTime = 0.2f;
 
+    //Speed
+    private float _currentSpeed = 0f;
+
     //Jumping
     private bool _jumping = false;
     BoxCollider2D _feetBoxCollider;
-    private float _origingravity;
+    private float _originalGravity;
     private float _direction;
 
     //Jumping techs
@@ -36,28 +41,30 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _origingravity = player.gravityScale;
+        _originalGravity = player.gravityScale;
         _feetBoxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
     {
         _direction = Input.GetAxisRaw("Horizontal");
+        CalculateSpeed();
         HandleJump();
     }
 
     private void FixedUpdate()
     {
+        player.velocity = new Vector2(_direction * _currentSpeed, player.velocity.y);
         HandleJumpFixed();
     }
 
-    private bool CheckIsPlayerOnGround()
+    private bool IsPlayerOnGround()
     {
         return Physics2D.OverlapBox((Vector2)feet.transform.position + _feetBoxCollider.offset, _feetBoxCollider.size, 0, groundLayer);
     }
     private void HandleJump()
     {
-        bool isOnGround = CheckIsPlayerOnGround();
+        bool isOnGround = IsPlayerOnGround();
 
         _coyoteTimeCounter = isOnGround ? coyoteTime : _coyoteTimeCounter - Time.deltaTime;
         _jumpBufferTimeCounter = Input.GetKeyDown(KeyCode.Space) ? jumpBufferTime : _jumpBufferTimeCounter - Time.deltaTime;
@@ -83,14 +90,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJumpFixed()
     {
-        player.gravityScale = player.velocity.y < 0f ? fallDownGravitiy : _origingravity;
-
-        player.velocity = new Vector2(_direction * speed, player.velocity.y);
+        player.gravityScale = player.velocity.y < 0f ? fallDownGravitiy : _originalGravity;
 
         if (_jumping)
         {
             player.velocity = new Vector2(player.velocity.x, jumpForce);
         }
+    }
+
+    private void CalculateSpeed()
+    {
+        _currentSpeed = Mathf.Abs(_direction) > 0f ?
+            _currentSpeed + (accelaration * Time.deltaTime):
+            _currentSpeed - (deceleration * Time.deltaTime);
+
+        _currentSpeed = Mathf.Clamp(_currentSpeed, 0f, maxSpeed);
     }
 
 }
