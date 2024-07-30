@@ -645,14 +645,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 943575317}
+  maxSpeed: 5
+  accelaration: 30
+  deceleration: 60
   feet: {fileID: 1806118441}
-  speed: 5
   jumpForce: 4
-  maxHoldOfJump: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
+  holdJumpTime: 0.3
   coyoteTime: 0.1
+  fallDownGravitiy: 3
+  jumpBufferTime: 0.2
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0

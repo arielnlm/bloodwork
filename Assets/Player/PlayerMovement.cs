@@ -29,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
 
     //Jumping
     private bool _jumping = false;
+    private bool _maybeJump = false;
+    private bool _quickJumpPromise = false;
     BoxCollider2D _feetBoxCollider;
     private float _originalGravity;
     private float _direction;
@@ -62,38 +64,47 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.OverlapBox((Vector2)feet.transform.position + _feetBoxCollider.offset, _feetBoxCollider.size, 0, groundLayer);
     }
+
+    /// <summary>
+    /// Handles conditions of jump and jump techs
+    /// </summary>
     private void HandleJump()
     {
         bool isOnGround = IsPlayerOnGround();
 
-        _coyoteTimeCounter = isOnGround ? coyoteTime : _coyoteTimeCounter - Time.deltaTime;
-        _jumpBufferTimeCounter = Input.GetKeyDown(KeyCode.Space) ? jumpBufferTime : _jumpBufferTimeCounter - Time.deltaTime;
+        _jumpBufferTimeCounter = Input.GetKeyDown(KeyCode.Space) ? 0f : _jumpBufferTimeCounter + Time.deltaTime;
+        _coyoteTimeCounter     = isOnGround                      ? 0f : _coyoteTimeCounter     + Time.deltaTime;
+        _holdJumpTimeCounter  += Time.deltaTime;
 
-        if ((Input.GetKeyDown(KeyCode.Space) || _jumpBufferTimeCounter > 0f ) && (isOnGround || _coyoteTimeCounter > 0))
+        if (Input.GetKeyDown(KeyCode.Space)) _maybeJump = true;
+        if (Input.GetKeyUp(KeyCode.Space))   _maybeJump = false;
+
+        //Jump
+        if ((_maybeJump || _jumpBufferTimeCounter < jumpBufferTime) && (isOnGround || _coyoteTimeCounter < coyoteTime))
         {
-            _coyoteTimeCounter = 0f;
+            _holdJumpTimeCounter = 0f;
+            _coyoteTimeCounter = coyoteTime;
+            _jumpBufferTimeCounter = jumpBufferTime;
             _jumping = true;
-            _holdJumpTimeCounter = 0;
-            _jumpBufferTimeCounter = 0f;
+            _quickJumpPromise = true;
         }
 
-        if (_jumping)
+        //Cancel Jump
+        if (_jumping && (!_maybeJump || _holdJumpTimeCounter > holdJumpTime))
         {
-            _holdJumpTimeCounter += Time.deltaTime;
-
-            if (Input.GetKeyUp(KeyCode.Space) || _holdJumpTimeCounter > holdJumpTime)
-            {
-                _jumping = false;
-            }
+            _maybeJump = false;
+            _jumping = false;
         }
+
     }
 
     private void HandleJumpFixed()
     {
         player.gravityScale = player.velocity.y < 0f ? fallDownGravitiy : _originalGravity;
 
-        if (_jumping)
+        if (_jumping || _quickJumpPromise)
         {
+            _quickJumpPromise = false;
             player.velocity = new Vector2(player.velocity.x, jumpForce);
         }
     }
