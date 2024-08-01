@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
         _jumpBufferTimeCounter = Input.GetKeyDown(KeyCode.Space) ? 0f : _jumpBufferTimeCounter + Time.deltaTime;
         _coyoteTimeCounter     = isOnGround                      ? 0f : _coyoteTimeCounter     + Time.deltaTime;
-        _holdJumpTimeCounter  += Time.deltaTime;
+        _holdJumpTimeCounter   += Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space)) _maybeJump = true;
         if (Input.GetKeyUp(KeyCode.Space))   _maybeJump = false;
