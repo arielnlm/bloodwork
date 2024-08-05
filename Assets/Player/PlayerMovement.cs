@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _currentSpeed = maxSpeed;
         _originalGravity = player.gravityScale;
         _feetBoxCollider = GetComponent<BoxCollider2D>();
     }
@@ -50,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         _direction = Input.GetAxisRaw("Horizontal");
-        CalculateSpeed();
+        //CalculateSpeed();
         HandleJump();
     }
 
@@ -118,4 +119,9 @@ public class PlayerMovement : MonoBehaviour
         _currentSpeed = Mathf.Clamp(_currentSpeed, 0f, maxSpeed);
     }
 
+    public float CurrentSpeed
+    {
+        get { return _currentSpeed; }
+        set { _currentSpeed = value; }
+    }
 }
