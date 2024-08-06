@@ -10,8 +10,7 @@ public class AbilityHolder : MonoBehaviour
     public float activeTime;
     public KeyCode key;
 
-    
-    private AbilityState abilityState = AbilityState.ready;
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -21,42 +20,10 @@ public class AbilityHolder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (abilityState) 
+        if (Input.GetKeyDown(key))
         {
-            case AbilityState.ready:
-                if (Input.GetKeyDown(key))
-                {
-                    Debug.Log("Current Speed: " + gameObject.GetComponent<PlayerMovement>().CurrentSpeed);
-                    ability.Activate(gameObject);
-                    abilityState = AbilityState.active;
-                    activeTime = ability.activeTime;
-                }
-            break;
-            case AbilityState.active:
-                if (activeTime < 0f)
-                {
-                    abilityState = AbilityState.cooldown;
-                    cooldownTime = ability.cooldownTime;
-                }
-                else
-                    activeTime -= Time.deltaTime;
-                break;
-            case AbilityState.cooldown:
-                if (cooldownTime < 0f)
-                    abilityState = AbilityState.ready;
-                else 
-                    cooldownTime -= Time.deltaTime;
-
-                break;
+            //Debug.Log("Current speed: " + gameObject.GetComponent<PlayerMovement>().CurrentSpeed);
+            ability.Use(gameObject);
         }
-    }
-
-
-
-    enum AbilityState
-    {
-        ready,
-        active,
-        cooldown
     }
 }
