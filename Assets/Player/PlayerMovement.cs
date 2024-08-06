@@ -53,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         _direction = Input.GetAxisRaw("Horizontal");
+        CalculateSpeed();
         HandleJump();
         HandleDirection();
     }
@@ -123,11 +124,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void CalculateSpeed()
     {
-        _currentSpeed = Mathf.Abs(_direction) > 0f ?
-            _currentSpeed + (accelaration * Time.deltaTime):
-            _currentSpeed - (deceleration * Time.deltaTime);
+        if (_currentSpeed > maxSpeed)
+        {
+            Debug.Log("Test");
+            _currentSpeed -= deceleration * Time.deltaTime;
 
-        _currentSpeed = Mathf.Clamp(_currentSpeed, 0f, maxSpeed);
+            if (_currentSpeed < 0f)
+                _currentSpeed = 0f;
+        }
+        else if (0f <= _currentSpeed && _currentSpeed < maxSpeed + 5f)
+            _currentSpeed = maxSpeed;
     }
 
     public float CurrentSpeed
