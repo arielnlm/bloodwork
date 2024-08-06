@@ -53,14 +53,13 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         _direction = Input.GetAxisRaw("Horizontal");
-        //CalculateSpeed();
         HandleJump();
         HandleDirection();
     }
 
     private void FixedUpdate()
     {
-        player.velocity = new Vector2((moveLeft + moveRight) * _currentSpeed, player.velocity.y);
+        player.velocity = new Vector2((moveLeft + moveRight) * _currentSpeed * Time.deltaTime, player.velocity.y);
         HandleJumpFixed();
     }
 
@@ -118,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         if (_jumping || _quickJumpPromise)
         {
             _quickJumpPromise = false;
-            player.velocity = new Vector2(player.velocity.x, jumpForce);
+            player.velocity = new Vector2(player.velocity.x, jumpForce * Time.deltaTime);
         }
     }
 
