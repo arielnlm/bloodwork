@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
 
     //Speed
     private float _currentSpeed = 0f;
+    private float moveLeft = 0f;
+    private float moveRight = 0f;
 
     //Jumping
     private bool _jumping = false;
@@ -53,11 +55,12 @@ public class PlayerMovement : MonoBehaviour
         _direction = Input.GetAxisRaw("Horizontal");
         //CalculateSpeed();
         HandleJump();
+        HandleDirection();
     }
 
     private void FixedUpdate()
     {
-        player.velocity = new Vector2(_direction * _currentSpeed, player.velocity.y);
+        player.velocity = new Vector2((moveLeft + moveRight) * _currentSpeed, player.velocity.y);
         HandleJumpFixed();
     }
 
@@ -97,6 +100,15 @@ public class PlayerMovement : MonoBehaviour
             _jumping = false;
         }
 
+    }
+
+    private void HandleDirection()
+    {
+        moveLeft  = _direction < 0f ? moveLeft  - (accelaration * Time.deltaTime) : moveLeft  + (deceleration * Time.deltaTime);
+        moveRight = _direction > 0f ? moveRight + (accelaration * Time.deltaTime) : moveRight - (deceleration * Time.deltaTime);
+
+        moveLeft = Mathf.Clamp(moveLeft, -1f, 0f);
+        moveRight = Mathf.Clamp(moveRight, 0f, 1f);
     }
 
     private void HandleJumpFixed()
