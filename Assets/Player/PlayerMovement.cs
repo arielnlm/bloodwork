@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Timers;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,113 +5,95 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Rigidbody2D player;
 
     [Header("Movement Speed")]
-    [SerializeField] float maxSpeed;
-    [SerializeField] float accelaration;
-    [SerializeField] float deceleration;
+    [SerializeField] private float maxSpeed;
+    [SerializeField] private float accelaration;
+    [SerializeField] private float deceleration;
 
     [Header("Jumping")]
-    [SerializeField] GameObject feet;
-    [SerializeField] float jumpForce = 5f;
-    [SerializeField] LayerMask groundLayer;
+    [SerializeField] private GameObject feet;
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private LayerMask groundLayer;
 
     [Header("Special Jumping Techs")]
-    [SerializeField] float holdJumpTime = 0.5f;
-    [SerializeField] float coyoteTime = 0.2f;
-    [SerializeField] float fallDownGravitiy = 3; // make gravitiy stronger when falling down
-    [SerializeField] float jumpBufferTime = 0.2f;
+    [SerializeField] private float holdJumpTime     = 0.3f;
+    [SerializeField] private float coyoteTime       = 0.08f;
+    [SerializeField] private float bufferTime       = 0.1f;
+    [SerializeField] private float fallDownGravitiy = 3; // make gravity stronger when falling down
 
-    //Speed
-    private float _currentSpeed = 0f;
+    private BoxCollider2D m_FeetBoxCollider;
 
-    //Jumping
-    private bool _jumping = false;
-    private bool _maybeJump = false;
-    private bool _quickJumpPromise = false;
-    BoxCollider2D _feetBoxCollider;
-    private float _originalGravity;
-    private float _direction;
+    private float m_CurrentSpeed = 0f;
+    private float m_OriginalGravity;
+    private float m_Direction;
 
-    //Jumping techs
-    private float _coyoteTimeCounter = 0f;
-    private float _holdJumpTimeCounter = 0f;
-    private float _jumpBufferTimeCounter = 0f;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        _originalGravity = player.gravityScale;
-        _feetBoxCollider = GetComponent<BoxCollider2D>();
+        m_OriginalGravity = player.gravityScale;
+        m_FeetBoxCollider = GetComponent<BoxCollider2D>();
     }
 
     private void Update()
     {
-        _direction = Input.GetAxisRaw("Horizontal");
+        m_Direction = Input.GetAxisRaw("Horizontal");
         CalculateSpeed();
         HandleJump();
     }
 
     private void FixedUpdate()
     {
-        player.velocity = new Vector2(_direction * _currentSpeed, player.velocity.y);
+        player.velocity = new Vector2(m_Direction * m_CurrentSpeed, player.velocity.y);
         HandleJumpFixed();
+    }
+
+    private bool m_ApplyJumpForce = false;
+    private bool m_Jumping        = false;
+
+    private float m_JumpTime   = 0f;
+    private float m_CoyoteTime = 0f;
+    private float m_BufferTime = 0f;
+
+    private void HandleJump()
+    {
+        var isOnGround     = IsPlayerOnGround();
+        var isSpacePressed = Input.GetKeyDown(KeyCode.Space);
+        var isSpaceHeld    = Input.GetKey(KeyCode.Space) && !isSpacePressed;
+
+        m_Jumping    = !isOnGround && (m_Jumping || m_ApplyJumpForce);
+        m_CoyoteTime = isOnGround     ? 0f : m_CoyoteTime + Time.deltaTime;
+        m_BufferTime = isSpacePressed ? 0f : m_BufferTime + Time.deltaTime;
+
+        var minJumpTimeApplies    = m_JumpTime <= Time.fixedDeltaTime;
+        var extendJumpTimeApplies = m_JumpTime <= holdJumpTime;
+        var coyoteTimeApplies     = m_CoyoteTime <= coyoteTime;
+        var bufferTimeApplies     = m_BufferTime <= bufferTime;
+
+        m_ApplyJumpForce = m_ApplyJumpForce && (minJumpTimeApplies || (extendJumpTimeApplies && isSpaceHeld)) ||
+                           !m_ApplyJumpForce && (isOnGround && (bufferTimeApplies || isSpacePressed) ||
+                                                 !m_Jumping && isSpacePressed && coyoteTimeApplies);
     }
 
     private bool IsPlayerOnGround()
     {
-        return Physics2D.OverlapBox((Vector2)feet.transform.position + _feetBoxCollider.offset, _feetBoxCollider.size, 0, groundLayer);
-    }
-
-    /// <summary>
-    /// Handles conditions of jump and jump techs
-    /// </summary>
-    private void HandleJump()
-    {
-        bool isOnGround = IsPlayerOnGround();
-
-        _jumpBufferTimeCounter = Input.GetKeyDown(KeyCode.Space) ? 0f : _jumpBufferTimeCounter + Time.deltaTime;
-        _coyoteTimeCounter     = isOnGround                      ? 0f : _coyoteTimeCounter     + Time.deltaTime;
-        _holdJumpTimeCounter  += Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.Space)) _maybeJump = true;
-        if (Input.GetKeyUp(KeyCode.Space))   _maybeJump = false;
-
-        //Jump
-        if ((_maybeJump || _jumpBufferTimeCounter < jumpBufferTime) && (isOnGround || _coyoteTimeCounter < coyoteTime))
-        {
-            _holdJumpTimeCounter = 0f;
-            _coyoteTimeCounter = coyoteTime;
-            _jumpBufferTimeCounter = jumpBufferTime;
-            _jumping = true;
-            _quickJumpPromise = true;
-        }
-
-        //Cancel Jump
-        if (_jumping && (!_maybeJump || _holdJumpTimeCounter > holdJumpTime))
-        {
-            _maybeJump = false;
-            _jumping = false;
-        }
-
+        return Physics2D.OverlapBox((Vector2)feet.transform.position + m_FeetBoxCollider.offset, m_FeetBoxCollider.size, 0, groundLayer);
     }
 
     private void HandleJumpFixed()
     {
-        player.gravityScale = player.velocity.y < 0f ? fallDownGravitiy : _originalGravity;
+        m_JumpTime = !m_Jumping ? 0f : m_JumpTime + Time.fixedDeltaTime;
 
-        if (_jumping || _quickJumpPromise)
-        {
-            _quickJumpPromise = false;
+        player.gravityScale = player.velocity.y < 0f ? fallDownGravitiy : m_OriginalGravity;
+
+        if (m_ApplyJumpForce)
             player.velocity = new Vector2(player.velocity.x, jumpForce);
-        }
     }
 
     private void CalculateSpeed()
     {
-        _currentSpeed = Mathf.Abs(_direction) > 0f ?
-            _currentSpeed + (accelaration * Time.deltaTime):
-            _currentSpeed - (deceleration * Time.deltaTime);
+        m_CurrentSpeed = Mathf.Abs(m_Direction) > 0f ?
+            m_CurrentSpeed + (accelaration * Time.deltaTime):
+            m_CurrentSpeed - (deceleration * Time.deltaTime);
 
-        _currentSpeed = Mathf.Clamp(_currentSpeed, 0f, maxSpeed);
+        m_CurrentSpeed = Mathf.Clamp(m_CurrentSpeed, 0f, maxSpeed);
     }
 
 }

@@ -654,9 +654,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   holdJumpTime: 0.3
-  coyoteTime: 0.1
+  coyoteTime: 0.08
   fallDownGravitiy: 3
-  jumpBufferTime: 0.2
+  bufferTime: 0.1
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
