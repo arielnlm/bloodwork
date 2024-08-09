@@ -9,13 +9,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Rigidbody2D player;
 
     [Header("Movement Speed")]
-    [SerializeField] float maxSpeed;
-    [SerializeField] float accelaration;
-    [SerializeField] float deceleration;
+    [SerializeField] float maxSpeed = 300f;
+    [SerializeField] float accelaration = 200f;
+    [SerializeField] float deceleration = 200f;
 
     [Header("Jumping")]
     [SerializeField] GameObject feet;
-    [SerializeField] float jumpForce = 5f;
+    [SerializeField] float jumpForce = 300f;
     [SerializeField] LayerMask groundLayer;
 
     [Header("Special Jumping Techs")]
@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        player.velocity = new Vector2((moveLeft + moveRight) * _currentSpeed * Time.deltaTime, player.velocity.y);
+        player.velocity = new Vector2((moveLeft + moveRight) * _currentSpeed * Time.fixedDeltaTime, player.velocity.y);
         HandleJumpFixed();
     }
 
@@ -118,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
         if (_jumping || _quickJumpPromise)
         {
             _quickJumpPromise = false;
-            player.velocity = new Vector2(player.velocity.x, jumpForce * Time.deltaTime);
+            player.velocity = new Vector2(player.velocity.x, jumpForce * Time.fixedDeltaTime);
         }
     }
 
