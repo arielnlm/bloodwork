@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        player.velocity = new Vector2(m_Direction * m_CurrentSpeed, player.velocity.y);
+        player.velocity = new Vector2(m_Direction * m_CurrentSpeed * Time.fixedDeltaTime, player.velocity.y);
         HandleJumpFixed();
     }
 

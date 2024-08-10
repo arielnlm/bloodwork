@@ -140,7 +140,7 @@ namespace TMPro.Examples
 
                 m_textMeshPro.color = new Color32(start_color.r, start_color.g, start_color.b, (byte)alpha);
 
-                // Move the floating text upward each update
+                // Direction the floating text upward each update
                 m_floatingText_Transform.position += new Vector3(0, starting_Count * Time.deltaTime, 0);
 
                 // Align floating text perpendicular to Camera.
@@ -195,7 +195,7 @@ namespace TMPro.Examples
 
                 m_textMesh.color = new Color32(start_color.r, start_color.g, start_color.b, (byte)alpha);
 
-                // Move the floating text upward each update
+                // Direction the floating text upward each update
                 m_floatingText_Transform.position += new Vector3(0, starting_Count * Time.deltaTime, 0);
 
                 // Align floating text perpendicular to Camera.
