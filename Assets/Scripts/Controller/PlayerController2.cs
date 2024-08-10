@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : Controller
+public class PlayerController2 : Controller
 {
     private bool _jumpKey = false;
 
@@ -18,7 +18,6 @@ public class PlayerController : Controller
     {
         float direction = Input.GetAxisRaw("Horizontal");
         _entity.Events.OnMove?.Invoke(direction);
-
 
     }
 

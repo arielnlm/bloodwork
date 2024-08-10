@@ -11,7 +11,7 @@ public abstract class Entity : MonoBehaviour
 
     private void Awake()
     {
-        Events = new Events();
+        Events = ScriptableObject.CreateInstance<Events>();
     }
 
     // Update is called once per frame

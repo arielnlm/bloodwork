@@ -42,17 +42,27 @@ public class PlayerMovement : MonoBehaviour
     private float _holdJumpTimeCounter = 0f;
     private float _jumpBufferTimeCounter = 0f;
 
+    private Entity _entity;
+
     // Start is called before the first frame update
     void Start()
     {
         _currentSpeed = maxSpeed;
         _originalGravity = player.gravityScale;
         _feetBoxCollider = GetComponent<BoxCollider2D>();
+        _entity = GetComponent<Entity>();
+
+        _entity.Events.OnMove += HandleMovementSub;
+
+    }
+
+    private void HandleMovementSub(float direction)
+    {
+        _direction = direction;
     }
 
     private void Update()
     {
-        _direction = Input.GetAxisRaw("Horizontal");
         CalculateSpeed();
         HandleJump();
         HandleDirection();
