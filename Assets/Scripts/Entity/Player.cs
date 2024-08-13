@@ -1,4 +1,4 @@
-﻿namespace BloodWork.Entity
+namespace BloodWork.Entity
 {
     public class Player : AbstractEntity
     {
