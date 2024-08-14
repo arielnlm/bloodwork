@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 943575324}
   - component: {fileID: 943575325}
   - component: {fileID: 943575326}
+  - component: {fileID: 943575327}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -582,7 +583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.336, y: 0.965, z: 0}
+  m_LocalPosition: {x: 1.695, y: 0.97, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -698,7 +699,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ca4dad7cff26fa42b4f4e64daed4f80, type: 3}
   m_Name: 
@@ -724,6 +725,21 @@ MonoBehaviour:
   JumpForce: 5
   ExtendJumpTimeLimit: 0.2
   m_BufferTimeLimit: 0.1
+--- !u!114 &943575327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943575314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104908f10d8e83a4d85d3f25e16dc21f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ActiveTime: 0.2
+  m_CooldownTime: 0
+  m_Speed: 1000
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
