@@ -9,7 +9,7 @@ namespace BloodWork.Entity
         public Action<MoveParams> OnMove;
 
         // Jump
-        public Action<PerformJumpParams> OnJumpKeyEvent;
+        public Action<PerformJumpParams> OnPerformJumpEvent;
         public Action<JumpStateParams>   OnJumpStateEvent;
     }
 }

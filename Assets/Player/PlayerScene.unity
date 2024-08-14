@@ -634,8 +634,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaxSpeed: 300
-  acceleration: 200
-  deceleration: 200
 --- !u!114 &943575321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,8 +660,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LayerTolerance: 0.025
   m_RigidBodyTolerance: 0.015
-  m_JumpForce: 5
-  m_ExtendJumpTime: 5
+  JumpForce: 5
+  ExtendJumpTime: 0.2
 --- !u!61 &943575323
 BoxCollider2D:
   m_ObjectHideFlags: 0

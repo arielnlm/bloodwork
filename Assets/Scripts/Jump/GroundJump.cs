@@ -1,4 +1,5 @@
 ﻿using BloodWork.Commons;
+using UnityEngine;
 
 namespace BloodWork.Jump
 {
@@ -6,10 +7,30 @@ namespace BloodWork.Jump
     {
         private void Update()
         {
-            if (JumpKeyState == KeyState.None)
+            if (!IsJumpHolder && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
                 return;
 
-            //TODO: Implementation
+            if (Utils.IsChanged(ref ApplyJumpForce, ShouldApplyJumpForce()))
+                JumpTime = 0;
+        }
+
+        private bool ShouldApplyJumpForce()
+        {
+            return ApplyJumpForce && !IsCeilingHit() && (!IsMinimumJumpTimePassed() || (TriggerState == TriggerState.Continue && !IsExtendedTimePassed())) ||
+                   !ApplyJumpForce && TriggerState == TriggerState.Start && IsOnGround();
+        }
+
+        private void FixedUpdate()
+        {
+            if (JumpState == JumpState.Default && !ApplyJumpForce)
+                return;
+
+            if (ApplyJumpForce)
+                Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, JumpForce);
+
+            JumpTime += Time.fixedDeltaTime;
+
+            NotifyCurrentState();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace BloodWork.Commons
             if (velocity.y > 0)
                 return JumpState.Jumping;
 
-            if (velocity.x < 0)
+            if (velocity.y < 0)
                 return JumpState.Falling;
 
             return JumpState.Default;

@@ -1,5 +1,4 @@
-﻿using System;
-using BloodWork.Commons;
+﻿using BloodWork.Commons;
 using BloodWork.Entity.EventParams;
 using UnityEngine;
 
@@ -14,7 +13,8 @@ namespace BloodWork.Controller
 
         protected override PerformJumpParams UpdatePerformJump()
         {
-            return new PerformJumpParams(KeyStates.GetState(KeyCode.Space));
+            return new PerformJumpParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.Space)
+                                                                        .GetValue()));
         }
     }
 }

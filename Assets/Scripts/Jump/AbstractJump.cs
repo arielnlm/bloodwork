@@ -7,60 +7,88 @@ namespace BloodWork.Jump
 {
     public abstract class AbstractJump : EntityBehaviour
     {
-        [SerializeField] private float m_LayerTolerance     = 0.025f;
-        [SerializeField] private float m_RigidBodyTolerance = 0.015f;
-        [SerializeField] private float m_JumpForce          = 0f;
-        [SerializeField] private float m_ExtendJumpTime     = 0f;
+        [SerializeField] private   float m_LayerTolerance     = 0.025f;
+        [SerializeField] private   float m_RigidBodyTolerance = 0.015f;
+        [SerializeField] protected float JumpForce            = 5f;
+        [SerializeField] protected float ExtendJumpTimeLimit  = 0.2f;
 
-        private float   m_GroundCheckDistance;
-        private Vector2 m_BoxColliderLocalSize;
-        
         protected BoxCollider2D  BoxCollider  { get; private set; }
         protected LayerMask      GroundLayer  { get; private set; }
-        protected KeyState       JumpKeyState { get; private set; }
-        protected JumpState      JumpState    { get; private set; }
-        
+
+        protected bool           ApplyJumpForce;
+        protected bool           IsJumpHolder;
+        protected float          JumpTime;
+        protected TriggerState   TriggerState;
+        protected JumpState      JumpState;
+
+        private float m_VerticalCheckDistance;
+        private Vector2 m_BoxColliderLocalSize;
+
         protected override void Awake()
         {
             base.Awake();
 
-            GroundLayer  = LayerMask.GetMask("Ground");
-            BoxCollider  = GetComponent<BoxCollider2D>();
-            JumpKeyState = KeyState.None;
+            GroundLayer = LayerMask.GetMask("Ground");
+            BoxCollider = GetComponent<BoxCollider2D>();
 
-            m_BoxColliderLocalSize = BoxCollider.size * transform.localScale;
-            m_GroundCheckDistance  = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
+            m_BoxColliderLocalSize  = BoxCollider.size * transform.localScale;
+            m_VerticalCheckDistance = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
 
-            SetJumpKeyState(new PerformJumpParams(KeyState.None));
+            SetTriggerState(new PerformJumpParams(TriggerState.Default));
             SetJumpState(new JumpStateParams(JumpState.Default));
         }
 
         protected virtual void OnEnable()
         {
-            Entity.Events.OnJumpKeyEvent   += SetJumpKeyState;
-            Entity.Events.OnJumpStateEvent += SetJumpState;
+            Entity.Events.OnPerformJumpEvent += SetTriggerState;
+            Entity.Events.OnJumpStateEvent   += SetJumpState;
         }
 
         protected virtual void OnDisable()
         {
-            Entity.Events.OnJumpKeyEvent   -= SetJumpKeyState;
-            Entity.Events.OnJumpStateEvent -= SetJumpState;
+            Entity.Events.OnPerformJumpEvent -= SetTriggerState;
+            Entity.Events.OnJumpStateEvent   -= SetJumpState;
         }
 
-        protected virtual void SetJumpKeyState(PerformJumpParams performJumpParams)
+        protected virtual void SetTriggerState(PerformJumpParams performJumpParams)
         {
-            JumpKeyState = performJumpParams.KeyState;
+            TriggerState = performJumpParams.TriggerState;
         }
 
         protected virtual void SetJumpState(JumpStateParams jumpStateParams)
         {
-            JumpState = jumpStateParams.JumpState;
+            JumpState      = jumpStateParams.JumpState;
+            IsJumpHolder   = jumpStateParams.InstanceID == GetInstanceID() &&
+                             jumpStateParams.JumpState != JumpState.Default;
+            ApplyJumpForce = IsJumpHolder && ApplyJumpForce;
+        }
+
+        protected virtual void NotifyCurrentState()
+        {
+            if (Utils.IsChanged(ref JumpState, JumpStates.GetState(Entity.Rigidbody.velocity))) 
+                Entity.Events.OnJumpStateEvent.Invoke(new JumpStateParams(JumpState, GetInstanceID()));
+        }
+
+        protected bool IsMinimumJumpTimePassed()
+        {
+            return JumpTime >= Time.fixedDeltaTime;
+        }
+
+        protected bool IsExtendedTimePassed()
+        {
+            return JumpTime >= ExtendJumpTimeLimit;
+        }
+
+        protected bool IsCeilingHit()
+        {
+            return Physics2D.Raycast(transform.position - new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.up, m_VerticalCheckDistance, GroundLayer) ||
+                   Physics2D.Raycast(transform.position + new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.up, m_VerticalCheckDistance, GroundLayer);
         }
 
         protected bool IsOnGround()
         {
-            return Physics2D.Raycast(transform.position - new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.down, m_GroundCheckDistance, GroundLayer) ||
-                   Physics2D.Raycast(transform.position + new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.down, m_GroundCheckDistance, GroundLayer);
+            return Physics2D.Raycast(transform.position - new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.down, m_VerticalCheckDistance, GroundLayer) ||
+                   Physics2D.Raycast(transform.position + new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.down, m_VerticalCheckDistance, GroundLayer);
         }
     }
 }

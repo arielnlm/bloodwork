@@ -4,21 +4,37 @@ namespace BloodWork.Entity.EventParams
 {
     public struct PerformJumpParams
     {
-        public KeyState KeyState;
+        public int          InstanceID;
+        public TriggerState TriggerState;
 
-        public PerformJumpParams(KeyState keyState)
+        public PerformJumpParams(TriggerState triggerState)
         {
-            KeyState = keyState;
+            InstanceID   = 0;
+            TriggerState = triggerState;
+        }
+
+        public PerformJumpParams(TriggerState triggerState, int instanceID)
+        {
+            InstanceID   = instanceID;
+            TriggerState = triggerState;
         }
     }
 
     public struct JumpStateParams
     {
+        public int       InstanceID;
         public JumpState JumpState;
 
         public JumpStateParams(JumpState jumpState)
         {
-            JumpState = jumpState;
+            InstanceID = 0;
+            JumpState  = jumpState;
+        }
+
+        public JumpStateParams(JumpState jumpState, int instanceID)
+        {
+            InstanceID = instanceID;
+            JumpState  = jumpState;
         }
     }
 }
