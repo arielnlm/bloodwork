@@ -9,7 +9,8 @@ namespace BloodWork.Jump
     {
         [SerializeField] private   float m_LayerTolerance     = 0.025f;
         [SerializeField] private   float m_RigidBodyTolerance = 0.015f;
-        [SerializeField] protected float JumpForce            = 5f;
+        [SerializeField] private   float m_FallDownGravity    = 4f;
+        [SerializeField] protected float JumpForce            = 10f;
         [SerializeField] protected float ExtendJumpTimeLimit  = 0.2f;
 
         protected BoxCollider2D  BoxCollider  { get; private set; }
@@ -21,7 +22,8 @@ namespace BloodWork.Jump
         protected TriggerState   TriggerState;
         protected JumpState      JumpState;
 
-        private float m_VerticalCheckDistance;
+        private float   m_OriginalGravity;
+        private float   m_VerticalCheckDistance;
         private Vector2 m_BoxColliderLocalSize;
 
         protected override void Awake()
@@ -31,6 +33,7 @@ namespace BloodWork.Jump
             GroundLayer = LayerMask.GetMask("Ground");
             BoxCollider = GetComponent<BoxCollider2D>();
 
+            m_OriginalGravity       = Entity.Rigidbody.gravityScale;
             m_BoxColliderLocalSize  = BoxCollider.size * transform.localScale;
             m_VerticalCheckDistance = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
 
@@ -61,6 +64,10 @@ namespace BloodWork.Jump
             IsJumpOwner    = jumpStateParams.InstanceID == GetInstanceID() &&
                              jumpStateParams.JumpState != JumpState.Default;
             ApplyJumpForce = IsJumpOwner && ApplyJumpForce;
+
+            if (IsJumpOwner)
+                Entity.Rigidbody.gravityScale = JumpState == JumpState.Falling ? m_FallDownGravity : m_OriginalGravity;
+
         }
 
         protected virtual void NotifyCurrentState()

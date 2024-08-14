@@ -567,7 +567,7 @@ SpriteRenderer:
   m_Color: {r: 0.29044318, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 2
+  m_DrawMode: 1
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 1
@@ -582,8 +582,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.336, y: 0.965, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalPosition: {x: 1.866, y: 1.067, z: 0}
+  m_LocalScale: {x: 0.39999998, y: 0.39999998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1806118442}
@@ -605,7 +605,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3.5
   m_Material: {fileID: 0}
   m_Interpolate: 1
   m_SleepingMode: 1
@@ -668,7 +668,7 @@ BoxCollider2D:
     oldSize: {x: 0.16, y: 0.16}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
-    drawMode: 2
+    drawMode: 1
     adaptiveTiling: 1
   m_AutoTiling: 0
   serializedVersion: 2
@@ -688,7 +688,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LayerTolerance: 0.025
   m_RigidBodyTolerance: 0.015
-  JumpForce: 5
+  m_FallDownGravity: 4
+  JumpForce: 10
   ExtendJumpTimeLimit: 0.2
   m_CoyoteTimeLimit: 0.04
 --- !u!114 &943575325
@@ -698,14 +699,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ca4dad7cff26fa42b4f4e64daed4f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_LayerTolerance: 0.025
   m_RigidBodyTolerance: 0.015
-  JumpForce: 5
+  m_FallDownGravity: 4
+  JumpForce: 10
   ExtendJumpTimeLimit: 0.2
 --- !u!114 &943575326
 MonoBehaviour:
@@ -721,9 +723,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LayerTolerance: 0.025
   m_RigidBodyTolerance: 0.015
-  JumpForce: 5
+  m_FallDownGravity: 4
+  JumpForce: 10
   ExtendJumpTimeLimit: 0.2
-  m_BufferTimeLimit: 0.1
+  m_BufferTimeLimit: 0.12
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
