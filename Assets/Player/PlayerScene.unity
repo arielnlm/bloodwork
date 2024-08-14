@@ -513,6 +513,8 @@ GameObject:
   - component: {fileID: 943575320}
   - component: {fileID: 943575319}
   - component: {fileID: 943575324}
+  - component: {fileID: 943575325}
+  - component: {fileID: 943575326}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -688,7 +690,40 @@ MonoBehaviour:
   m_RigidBodyTolerance: 0.015
   JumpForce: 5
   ExtendJumpTimeLimit: 0.2
-  m_CoyoteTimeLimit: 0.08
+  m_CoyoteTimeLimit: 0.04
+--- !u!114 &943575325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943575314}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ca4dad7cff26fa42b4f4e64daed4f80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerTolerance: 0.025
+  m_RigidBodyTolerance: 0.015
+  JumpForce: 5
+  ExtendJumpTimeLimit: 0.2
+--- !u!114 &943575326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943575314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87d67b58eb507494dbe540eade5b5ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_LayerTolerance: 0.025
+  m_RigidBodyTolerance: 0.015
+  JumpForce: 5
+  ExtendJumpTimeLimit: 0.2
+  m_BufferTimeLimit: 0.1
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
