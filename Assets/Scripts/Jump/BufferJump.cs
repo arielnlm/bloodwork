@@ -13,10 +13,10 @@ namespace BloodWork.Jump
         {
             m_BufferTime = TriggerState == TriggerState.Start ? 0 : m_BufferTime + Time.deltaTime;
 
-            if (!IsJumpHolder && JumpState != JumpState.Default)
+            if (!IsJumpOwner && JumpState != JumpState.Default)
                 return;
 
-            if (Utils.IsChanged(ref ApplyJumpForce, ShouldApplyJumpForce()))
+            if (Utils.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
                 JumpTime = 0;
         }
 

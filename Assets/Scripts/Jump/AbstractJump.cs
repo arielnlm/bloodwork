@@ -16,7 +16,7 @@ namespace BloodWork.Jump
         protected LayerMask      GroundLayer  { get; private set; }
 
         protected bool           ApplyJumpForce;
-        protected bool           IsJumpHolder;
+        protected bool           IsJumpOwner;
         protected float          JumpTime;
         protected TriggerState   TriggerState;
         protected JumpState      JumpState;
@@ -58,9 +58,9 @@ namespace BloodWork.Jump
         protected virtual void SetJumpState(JumpStateParams jumpStateParams)
         {
             JumpState      = jumpStateParams.JumpState;
-            IsJumpHolder   = jumpStateParams.InstanceID == GetInstanceID() &&
+            IsJumpOwner    = jumpStateParams.InstanceID == GetInstanceID() &&
                              jumpStateParams.JumpState != JumpState.Default;
-            ApplyJumpForce = IsJumpHolder && ApplyJumpForce;
+            ApplyJumpForce = IsJumpOwner && ApplyJumpForce;
         }
 
         protected virtual void NotifyCurrentState()

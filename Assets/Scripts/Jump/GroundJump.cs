@@ -7,10 +7,10 @@ namespace BloodWork.Jump
     {
         private void Update()
         {
-            if (!IsJumpHolder && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
+            if (!IsJumpOwner && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
                 return;
 
-            if (Utils.IsChanged(ref ApplyJumpForce, ShouldApplyJumpForce()))
+            if (Utils.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
                 JumpTime = 0;
         }
 
