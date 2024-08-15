@@ -37,6 +37,17 @@ namespace BloodWork.Movement
         private void SetDirection(Move move)
         {
             m_Direction = move.Direction;
+            SetLookDirection();
+        }
+
+
+        private void SetLookDirection()
+        {
+            if (m_Direction == MoveDirection.Idle)
+                return;
+
+            Vector3 lookDirection = Entity.transform.right;
+            Entity.transform.right = new Vector3(m_Direction.GetValue(), lookDirection.y, lookDirection.z);
         }
 
         private void FixedUpdate()
