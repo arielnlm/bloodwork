@@ -8,7 +8,8 @@ namespace BloodWork.Controller
 {
     public abstract class AbstractController : EntityBehaviour
     {
-        protected Move        Move;
+        protected Move              Move;
+        protected BehaviourState    JumpAllowed;
         protected PerformJumpParams PerformJump;
         protected PerformDashParams PerformDash;
 
@@ -19,21 +20,29 @@ namespace BloodWork.Controller
         {
             base.Awake();
             State = BehaviourState.Enable;
+            JumpAllowed = BehaviourState.Enable;
         }
 
         private void OnEnable()
         {
             Entity.Events.OnControllerStateEvent += ChangeState;
+            Entity.Events.OnToggleJump += SetAvailabilityJump;
         }
 
         private void OnDisable()
         {
             Entity.Events.OnControllerStateEvent -= ChangeState;
+            Entity.Events.OnToggleJump -= SetAvailabilityJump;
         }
 
         private void ChangeState(ControllerStateParams controllerStateParams)
         {
             State = controllerStateParams.State;
+        }
+
+        private void SetAvailabilityJump(BehaviourState flag)
+        {
+            JumpAllowed = flag;
         }
 
         protected virtual void Update()
@@ -44,7 +53,7 @@ namespace BloodWork.Controller
             if (Utils.IsChanged(ref Move, UpdateMove()))
                 Entity.Events.OnPerformMove.Invoke(Move);
 
-            if (Utils.IsChanged(ref PerformJump, UpdatePerformJump()))
+            if (JumpAllowed == BehaviourState.Enable && Utils.IsChanged(ref PerformJump, UpdatePerformJump()))
                 Entity.Events.OnPerformJumpEvent.Invoke(PerformJump);
 
             if (Utils.IsChanged(ref PerformDash, UpdateDash()))
