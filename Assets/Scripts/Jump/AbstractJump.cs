@@ -38,8 +38,8 @@ namespace BloodWork.Jump
             m_OriginalGravity       = Entity.Rigidbody.gravityScale;
             m_BoxColliderLocalSize  = BoxCollider.size * transform.localScale;
             m_VerticalCheckDistance = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
-            JumpBehaviourState = BehaviourState.Enable;
 
+            SetAvailabilityJump(new JumpBehaviourState(BehaviourState.Enable));
             SetTriggerState(new PerformJumpParams(TriggerState.Default));
             SetJumpState(new JumpStateParams(JumpState.Default));
         }
