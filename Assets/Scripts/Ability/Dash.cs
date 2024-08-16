@@ -21,12 +21,12 @@ namespace BloodWork.Ability
 
         private void OnEnable()
         {
-            Entity.Events.OnDashTrigger += SetTriggerState;
+            Entity.Events.OnPerformDash += SetTriggerState;
         }
 
         private void OnDisable()
         {
-            Entity.Events.OnDashTrigger -= SetTriggerState;
+            Entity.Events.OnPerformDash -= SetTriggerState;
         }
 
         private void SetTriggerState(PerformDashParams dashState)
@@ -38,7 +38,7 @@ namespace BloodWork.Ability
 
             m_IsActive = true;
             Entity.Events.OnMoveStateEvent.Invoke(new MoveStateParams(BehaviourState.Disable));
-            Entity.Events.OnToggleJump.Invoke(BehaviourState.Disable);
+            Entity.Events.OnJumpBehaviourState.Invoke(new JumpBehaviourState(BehaviourState.Disable));
         }
 
         private void FixedUpdate()
@@ -48,13 +48,13 @@ namespace BloodWork.Ability
             if (!m_IsActive)
                 return;
 
-            Entity.Rigidbody.velocity = new Vector2(Entity.transform.right.x * m_Speed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
+            Entity.Rigidbody.velocity = new Vector2(Entity.transform.right.x * m_Speed * Time.fixedDeltaTime, 0f);
 
             m_IsActive = m_ActiveTimeCounter <= m_ActiveTime;
             if (!m_IsActive)
             {
                 Entity.Events.OnMoveStateEvent.Invoke(new MoveStateParams(BehaviourState.Enable));
-                Entity.Events.OnToggleJump.Invoke(BehaviourState.Enable);
+                Entity.Events.OnJumpBehaviourState.Invoke(new JumpBehaviourState(BehaviourState.Enable));
             }
         }
     }

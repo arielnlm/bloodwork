@@ -8,10 +8,10 @@ namespace BloodWork.Controller
 {
     public abstract class AbstractController : EntityBehaviour
     {
-        protected Move              Move;
-        protected BehaviourState    JumpAllowed;
-        protected PerformJumpParams PerformJump;
-        protected PerformDashParams PerformDash;
+        protected Move               Move;
+        protected PerformJumpParams  PerformJump;
+        protected PerformDashParams  PerformDash;
+        protected PerformGlideParams PerformGlide;
 
         protected BehaviourState    State;
 
@@ -20,29 +20,21 @@ namespace BloodWork.Controller
         {
             base.Awake();
             State = BehaviourState.Enable;
-            JumpAllowed = BehaviourState.Enable;
         }
 
         private void OnEnable()
         {
-            Entity.Events.OnControllerStateEvent += ChangeState;
-            Entity.Events.OnToggleJump += SetAvailabilityJump;
+            Entity.Events.OnControllerState += ChangeState;
         }
 
         private void OnDisable()
         {
-            Entity.Events.OnControllerStateEvent -= ChangeState;
-            Entity.Events.OnToggleJump -= SetAvailabilityJump;
+            Entity.Events.OnControllerState -= ChangeState;
         }
 
         private void ChangeState(ControllerStateParams controllerStateParams)
         {
             State = controllerStateParams.State;
-        }
-
-        private void SetAvailabilityJump(BehaviourState flag)
-        {
-            JumpAllowed = flag;
         }
 
         protected virtual void Update()
@@ -53,11 +45,14 @@ namespace BloodWork.Controller
             if (Utils.IsChanged(ref Move, UpdateMove()))
                 Entity.Events.OnPerformMove.Invoke(Move);
 
-            if (JumpAllowed == BehaviourState.Enable && Utils.IsChanged(ref PerformJump, UpdatePerformJump()))
-                Entity.Events.OnPerformJumpEvent.Invoke(PerformJump);
+            if (Utils.IsChanged(ref PerformJump, UpdatePerformJump()))
+                Entity.Events.OnPerformJump.Invoke(PerformJump);
 
             if (Utils.IsChanged(ref PerformDash, UpdateDash()))
-                Entity.Events.OnDashTrigger.Invoke(PerformDash);
+                Entity.Events.OnPerformDash.Invoke(PerformDash);
+
+            if (Utils.IsChanged(ref PerformGlide, UpdateGlide()))
+                Entity.Events.OnPerformGlide.Invoke(PerformGlide);
         }
 
         protected virtual Move UpdateMove() => new();
@@ -65,5 +60,7 @@ namespace BloodWork.Controller
         protected virtual PerformJumpParams UpdatePerformJump() => new();
 
         protected virtual PerformDashParams UpdateDash() => new();
+
+        protected virtual PerformGlideParams UpdateGlide() => new();
     }
 }

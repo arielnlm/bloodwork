@@ -1,4 +1,5 @@
-﻿using BloodWork.Commons;
+﻿using System;
+using BloodWork.Commons;
 using BloodWork.Entity;
 using BloodWork.Entity.EventParams;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace BloodWork.Jump
         protected float          JumpTime;
         protected TriggerState   TriggerState;
         protected JumpState      JumpState;
+        protected BehaviourState JumpBehaviourState;
 
         private float   m_OriginalGravity;
         private float   m_VerticalCheckDistance;
@@ -36,6 +38,7 @@ namespace BloodWork.Jump
             m_OriginalGravity       = Entity.Rigidbody.gravityScale;
             m_BoxColliderLocalSize  = BoxCollider.size * transform.localScale;
             m_VerticalCheckDistance = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
+            JumpBehaviourState = BehaviourState.Enable;
 
             SetTriggerState(new PerformJumpParams(TriggerState.Default));
             SetJumpState(new JumpStateParams(JumpState.Default));
@@ -43,14 +46,16 @@ namespace BloodWork.Jump
 
         protected virtual void OnEnable()
         {
-            Entity.Events.OnPerformJumpEvent += SetTriggerState;
-            Entity.Events.OnJumpStateEvent   += SetJumpState;
+            Entity.Events.OnPerformJump         += SetTriggerState;
+            Entity.Events.OnJumpState           += SetJumpState;
+            Entity.Events.OnJumpBehaviourState  += SetAvailabilityJump;
         }
 
         protected virtual void OnDisable()
         {
-            Entity.Events.OnPerformJumpEvent -= SetTriggerState;
-            Entity.Events.OnJumpStateEvent   -= SetJumpState;
+            Entity.Events.OnPerformJump         -= SetTriggerState;
+            Entity.Events.OnJumpState           -= SetJumpState;
+            Entity.Events.OnJumpBehaviourState  -= SetAvailabilityJump;
         }
 
         protected virtual void SetTriggerState(PerformJumpParams performJumpParams)
@@ -70,10 +75,15 @@ namespace BloodWork.Jump
 
         }
 
+        private void SetAvailabilityJump(JumpBehaviourState jumpBehaviourState)
+        {
+            JumpBehaviourState = jumpBehaviourState.State;
+        }
+
         protected virtual void NotifyCurrentState()
         {
             if (Utils.IsChanged(ref JumpState, JumpStates.GetState(Entity.Rigidbody.velocity))) 
-                Entity.Events.OnJumpStateEvent.Invoke(new JumpStateParams(JumpState, GetInstanceID()));
+                Entity.Events.OnJumpState.Invoke(new JumpStateParams(JumpState, GetInstanceID()));
         }
 
         protected bool IsMinimumJumpTimePassed()

@@ -13,7 +13,7 @@ namespace BloodWork.Jump
         {
             m_CoyoteTime = IsOnGround() ? 0f : m_CoyoteTime + Time.deltaTime;
 
-            if (!IsJumpOwner && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
+            if (JumpBehaviourState == BehaviourState.Disable || !IsJumpOwner && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
                 return;
 
             if (Utils.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))

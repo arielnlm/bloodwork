@@ -7,19 +7,41 @@ namespace BloodWork.Entity
 {
     public struct Events
     {
-        // Movement
+        #region Movement
+
         public Action<Move> OnPerformMove;
         public Action<MoveStateParams> OnMoveStateEvent;
 
-        // Jump
-        public Action<BehaviourState>    OnToggleJump;
-        public Action<PerformJumpParams> OnPerformJumpEvent;
-        public Action<JumpStateParams>   OnJumpStateEvent;
+        #endregion
 
-        //Ability
-        public Action<PerformDashParams> OnDashTrigger;
+        #region Jump
 
-        //Controller
-        public Action<ControllerStateParams> OnControllerStateEvent;
+        public Action<JumpBehaviourState> OnJumpBehaviourState;
+        public Action<PerformJumpParams> OnPerformJump;
+        public Action<JumpStateParams> OnJumpState;
+        
+        #endregion
+
+        #region Ability
+
+        #region Dash
+       
+        public Action<PerformDashParams> OnPerformDash;
+
+        #endregion
+
+        #region Glide
+       
+        public Action<PerformGlideParams> OnPerformGlide;
+
+        #endregion
+
+        #endregion
+
+        #region Controller
+
+        public Action<ControllerStateParams> OnControllerState;
+
+        #endregion
     }
 }

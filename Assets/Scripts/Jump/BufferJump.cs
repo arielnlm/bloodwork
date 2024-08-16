@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BloodWork.Jump
 {
-    public class BufferJump : AbstractJump
+    public sealed class BufferJump : AbstractJump
     {
         [SerializeField] private float m_BufferTimeLimit = 0.12f;
 
@@ -13,7 +13,7 @@ namespace BloodWork.Jump
         {
             m_BufferTime = TriggerState == TriggerState.Start ? 0 : m_BufferTime + Time.deltaTime;
 
-            if (!IsJumpOwner && JumpState != JumpState.Default)
+            if (JumpBehaviourState == BehaviourState.Disable || !IsJumpOwner && JumpState != JumpState.Default)
                 return;
 
             if (Utils.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
