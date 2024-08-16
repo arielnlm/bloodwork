@@ -38,11 +38,11 @@ namespace BloodWork.Entity.EventParams
         }
     }
 
-    public struct JumpBehaviourState
+    public struct JumpBehaviourStateParams
     {
         public BehaviourState State;
 
-        public JumpBehaviourState(BehaviourState state)
+        public JumpBehaviourStateParams(BehaviourState state)
         {
             State = state;
         }

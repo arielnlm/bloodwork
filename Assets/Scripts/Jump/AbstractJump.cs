@@ -24,7 +24,6 @@ namespace BloodWork.Jump
         protected JumpState      JumpState;
         protected BehaviourState JumpBehaviourState;
 
-        private float   m_OriginalGravity;
         private float   m_VerticalCheckDistance;
         private Vector2 m_BoxColliderLocalSize;
 
@@ -35,7 +34,6 @@ namespace BloodWork.Jump
             GroundLayer = LayerMask.GetMask("Ground");
             BoxCollider = GetComponent<BoxCollider2D>();
 
-            m_OriginalGravity       = Entity.Rigidbody.gravityScale;
             m_BoxColliderLocalSize  = BoxCollider.size * transform.localScale;
             m_VerticalCheckDistance = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
             JumpBehaviourState = BehaviourState.Enable;
@@ -65,19 +63,21 @@ namespace BloodWork.Jump
 
         protected virtual void SetJumpState(JumpStateParams jumpStateParams)
         {
+            if (IsJumpOwner && JumpState == JumpState.Default)
+                Entity.Gravity -= GetInstanceID();
+
             JumpState      = jumpStateParams.JumpState;
             IsJumpOwner    = jumpStateParams.InstanceID == GetInstanceID() &&
                              jumpStateParams.JumpState != JumpState.Default;
             ApplyJumpForce = IsJumpOwner && ApplyJumpForce;
 
-            if (IsJumpOwner)
-                Entity.Rigidbody.gravityScale = JumpState == JumpState.Falling ? m_FallDownGravity : m_OriginalGravity;
-
+            if (IsJumpOwner && JumpState == JumpState.Falling)
+                Entity.Gravity += (Priority.Medium, m_FallDownGravity, GetInstanceID());
         }
 
-        private void SetAvailabilityJump(JumpBehaviourState jumpBehaviourState)
+        private void SetAvailabilityJump(JumpBehaviourStateParams jumpBehaviourStateParams)
         {
-            JumpBehaviourState = jumpBehaviourState.State;
+            JumpBehaviourState = jumpBehaviourStateParams.State;
         }
 
         protected virtual void NotifyCurrentState()
