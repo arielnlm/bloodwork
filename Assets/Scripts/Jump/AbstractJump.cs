@@ -83,7 +83,7 @@ namespace BloodWork.Jump
         protected virtual void NotifyCurrentState()
         {
             if (Utils.IsChanged(ref JumpState, JumpStates.GetState(Entity.Rigidbody.velocity))) 
-                Entity.Events.OnJumpState.Invoke(new JumpStateParams(JumpState, GetInstanceID()));
+                Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState, GetInstanceID()));
         }
 
         protected bool IsMinimumJumpTimePassed()

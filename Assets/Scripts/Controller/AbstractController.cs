@@ -43,16 +43,16 @@ namespace BloodWork.Controller
                 return;
 
             if (Utils.IsChanged(ref Move, UpdateMove()))
-                Entity.Events.OnPerformMove.Invoke(Move);
+                Entity.Events.OnPerformMove?.Invoke(Move);
 
             if (Utils.IsChanged(ref PerformJump, UpdatePerformJump()))
-                Entity.Events.OnPerformJump.Invoke(PerformJump);
+                Entity.Events.OnPerformJump?.Invoke(PerformJump);
 
             if (Utils.IsChanged(ref PerformDash, UpdateDash()))
-                Entity.Events.OnPerformDash.Invoke(PerformDash);
+                Entity.Events.OnPerformDash?.Invoke(PerformDash);
 
             if (Utils.IsChanged(ref PerformGlide, UpdateGlide()))
-                Entity.Events.OnPerformGlide.Invoke(PerformGlide);
+                Entity.Events.OnPerformGlide?.Invoke(PerformGlide);
         }
 
         protected virtual Move UpdateMove() => new();

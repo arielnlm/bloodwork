@@ -8,9 +8,9 @@ namespace BloodWork.Entity
 {
     public class Gravity
     {
-        private Dictionary<Priority, List<float>> m_GravityMap;
-        private Dictionary<int, (Priority priority, int index)> m_IndexMap; // for removing gravity with id
-        private readonly Rigidbody2D m_Rigidbody;
+        private readonly Dictionary<Priority, List<float>>               m_GravityMap;
+        private readonly Dictionary<int, (Priority priority, int index)> m_IndexMap; // for removing gravity with id
+        private readonly Rigidbody2D                                     m_Rigidbody;
 
         public Gravity(Rigidbody2D rigidbody)
         {
