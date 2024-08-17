@@ -16,7 +16,7 @@ namespace BloodWork.Entity
 
         #region Jump
 
-        public Action<JumpBehaviourState> OnJumpBehaviourState;
+        public Action<JumpBehaviourStateParams> OnJumpBehaviourState;
         public Action<PerformJumpParams> OnPerformJump;
         public Action<JumpStateParams> OnJumpState;
         

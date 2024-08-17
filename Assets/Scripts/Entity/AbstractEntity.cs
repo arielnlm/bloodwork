@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BloodWork.Entity
@@ -7,9 +8,12 @@ namespace BloodWork.Entity
         public Events      Events;
         public Rigidbody2D Rigidbody { get; private set; }
 
+        public Gravity     Gravity;
+
         protected virtual void Awake()
         {
             Rigidbody = GetComponent<Rigidbody2D>();
+            Gravity = new Gravity(Rigidbody);
         }
     }
 }

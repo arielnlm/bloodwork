@@ -23,5 +23,11 @@ namespace BloodWork.Controller
             return new PerformDashParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.X)
                 .GetValue()));
         }
+
+        protected override PerformGlideParams UpdateGlide()
+        {
+            return new PerformGlideParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.Space)
+                .GetValue()));
+        }
     }
 }

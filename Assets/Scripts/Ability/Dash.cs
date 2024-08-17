@@ -38,7 +38,7 @@ namespace BloodWork.Ability
 
             m_IsActive = true;
             Entity.Events.OnMoveStateEvent.Invoke(new MoveStateParams(BehaviourState.Disable));
-            Entity.Events.OnJumpBehaviourState.Invoke(new JumpBehaviourState(BehaviourState.Disable));
+            Entity.Events.OnJumpBehaviourState.Invoke(new JumpBehaviourStateParams(BehaviourState.Disable));
         }
 
         private void FixedUpdate()
@@ -54,7 +54,7 @@ namespace BloodWork.Ability
             if (!m_IsActive)
             {
                 Entity.Events.OnMoveStateEvent.Invoke(new MoveStateParams(BehaviourState.Enable));
-                Entity.Events.OnJumpBehaviourState.Invoke(new JumpBehaviourState(BehaviourState.Enable));
+                Entity.Events.OnJumpBehaviourState.Invoke(new JumpBehaviourStateParams(BehaviourState.Enable));
             }
         }
     }
