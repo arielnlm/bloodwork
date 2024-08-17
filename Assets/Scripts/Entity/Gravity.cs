@@ -1,5 +1,5 @@
-﻿using System;
-using BloodWork.Commons;
+﻿using BloodWork.Commons;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,8 +27,9 @@ namespace BloodWork.Entity
         private Gravity Add(Priority priority, float gravity, int id)
         {
             List<float> priorityList = m_GravityMap[priority];
-            priorityList.Add(gravity);
+            
             m_IndexMap.Add(id, (priority, priorityList.Count));
+            priorityList.Add(gravity);
 
             m_Rigidbody.gravityScale = Get();
             
@@ -37,9 +38,10 @@ namespace BloodWork.Entity
 
         private Gravity Remove(int id)
         {
-            (Priority priority, int index) lookup = m_IndexMap[id];
-            m_GravityMap[lookup.priority].RemoveAt(lookup.index);
-           
+            (Priority priority, int index) = m_IndexMap[id];
+            m_GravityMap[priority].RemoveAt(index);
+            m_IndexMap.Remove(id);
+
             m_Rigidbody.gravityScale = Get();
 
             return this;
