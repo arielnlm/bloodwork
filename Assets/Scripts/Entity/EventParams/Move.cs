@@ -2,21 +2,21 @@
 
 namespace BloodWork.Entity.EventParams
 {
-    public struct Move
+    public struct PerformMoveParams
     {
         public MoveDirection Direction;
 
-        public Move(MoveDirection direction)
+        public PerformMoveParams(MoveDirection direction)
         {
             Direction = direction;
         }
     }
 
-    public struct MoveStateParams
+    public struct MoveDirectionChangeParams
     {
         public BehaviourState State;
 
-        public MoveStateParams(BehaviourState state)
+        public MoveDirectionChangeParams(BehaviourState state)
         {
             State = state;
         }

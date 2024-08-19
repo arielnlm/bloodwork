@@ -14,9 +14,10 @@ namespace BloodWork.Entity
 
         public Gravity(Rigidbody2D rigidbody)
         {
-            m_GravityMap = new Dictionary<Priority, List<float>>();
-            m_IndexMap = new Dictionary<int, (Priority priority, int index)>();
             m_Rigidbody = rigidbody;
+            
+            m_GravityMap = new Dictionary<Priority, List<float>>();
+            m_IndexMap   = new Dictionary<int, (Priority priority, int index)>();
 
             foreach (Priority priority in GetPriorities())
                 m_GravityMap.Add(priority, new List<float>());
@@ -39,9 +40,10 @@ namespace BloodWork.Entity
         private Gravity Remove(int id)
         {
             (Priority priority, int index) = m_IndexMap[id];
+
             m_GravityMap[priority].RemoveAt(index);
             m_IndexMap.Remove(id);
-
+            
             m_Rigidbody.gravityScale = Get();
 
             return this;
@@ -65,12 +67,12 @@ namespace BloodWork.Entity
             return ((Priority[])Enum.GetValues(typeof(Priority))).Reverse();
         }
 
-        public static Gravity operator +(Gravity gravity, (Priority priority, float gravity, int id) item)
+        public static Gravity operator+(Gravity gravity, (Priority priority, float gravity, int id) item)
         {
             return gravity.Add(item.priority, item.gravity, item.id);
         }
 
-        public static Gravity operator -(Gravity gravity, int id)
+        public static Gravity operator-(Gravity gravity, int id)
         {
             return gravity.Remove(id);
         }

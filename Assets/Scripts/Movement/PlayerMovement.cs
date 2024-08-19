@@ -95,5 +95,5 @@ public class PlayerMovement : MonoBehaviour
 
         m_CurrentSpeed = Mathf.Clamp(m_CurrentSpeed, 0f, maxSpeed);
     }
-
+    
 }

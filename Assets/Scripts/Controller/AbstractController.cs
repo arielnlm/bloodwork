@@ -1,19 +1,19 @@
-﻿using System;
-using BloodWork.Commons;
+﻿using BloodWork.Commons;
 using BloodWork.Entity;
 using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
+using BloodWork.Utils;
 
 namespace BloodWork.Controller
 {
     public abstract class AbstractController : EntityBehaviour
     {
-        protected Move               Move;
+        protected PerformMoveParams  PerformMove;
         protected PerformJumpParams  PerformJump;
         protected PerformDashParams  PerformDash;
         protected PerformGlideParams PerformGlide;
 
-        protected BehaviourState    State;
+        protected BehaviourState State;
 
 
         protected override void Awake()
@@ -24,12 +24,12 @@ namespace BloodWork.Controller
 
         private void OnEnable()
         {
-            Entity.Events.OnControllerState += ChangeState;
+            Entity.Events.OnControllerStateChange += ChangeState;
         }
 
         private void OnDisable()
         {
-            Entity.Events.OnControllerState -= ChangeState;
+            Entity.Events.OnControllerStateChange -= ChangeState;
         }
 
         private void ChangeState(ControllerStateParams controllerStateParams)
@@ -42,20 +42,20 @@ namespace BloodWork.Controller
             if (State == BehaviourState.Disable)
                 return;
 
-            if (Utils.IsChanged(ref Move, UpdateMove()))
-                Entity.Events.OnPerformMove?.Invoke(Move);
+            if (ChangeReference.IsChanged(ref PerformMove, UpdateMove()))
+                Entity.Events.OnPerformMove?.Invoke(PerformMove);
 
-            if (Utils.IsChanged(ref PerformJump, UpdatePerformJump()))
+            if (ChangeReference.IsChanged(ref PerformJump, UpdatePerformJump()))
                 Entity.Events.OnPerformJump?.Invoke(PerformJump);
 
-            if (Utils.IsChanged(ref PerformDash, UpdateDash()))
+            if (ChangeReference.IsChanged(ref PerformDash, UpdateDash()))
                 Entity.Events.OnPerformDash?.Invoke(PerformDash);
 
-            if (Utils.IsChanged(ref PerformGlide, UpdateGlide()))
+            if (ChangeReference.IsChanged(ref PerformGlide, UpdateGlide()))
                 Entity.Events.OnPerformGlide?.Invoke(PerformGlide);
         }
 
-        protected virtual Move UpdateMove() => new();
+        protected virtual PerformMoveParams UpdateMove() => new();
 
         protected virtual PerformJumpParams UpdatePerformJump() => new();
 

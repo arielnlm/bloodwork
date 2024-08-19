@@ -1,4 +1,6 @@
 ﻿using BloodWork.Commons;
+using BloodWork.Entity.EventParams;
+using BloodWork.Utils;
 using UnityEngine;
 
 namespace BloodWork.Jump
@@ -7,11 +9,14 @@ namespace BloodWork.Jump
     {
         private void Update()
         {
-            if (JumpBehaviourState == BehaviourState.Disable || !IsJumpOwner && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
+            if (BehaviourState == BehaviourState.Disable || !IsJumpOwner && (TriggerState != TriggerState.Start || JumpState != JumpState.Default))
                 return;
 
-            if (Utils.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
-                JumpTime = 0;
+            if (!ChangeReference.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true)) 
+                return;
+
+            JumpTime = 0;
+            Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState.Jumping, GetInstanceID()));
         }
 
         private bool ShouldApplyJumpForce()
@@ -29,8 +34,6 @@ namespace BloodWork.Jump
                 Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, JumpForce);
 
             JumpTime += Time.fixedDeltaTime;
-
-            NotifyCurrentState();
         }
     }
 }

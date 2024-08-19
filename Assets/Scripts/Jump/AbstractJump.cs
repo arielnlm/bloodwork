@@ -1,5 +1,4 @@
-﻿using System;
-using BloodWork.Commons;
+﻿using BloodWork.Commons;
 using BloodWork.Entity;
 using BloodWork.Entity.EventParams;
 using UnityEngine;
@@ -8,52 +7,43 @@ namespace BloodWork.Jump
 {
     public abstract class AbstractJump : EntityBehaviour
     {
-        [SerializeField] private   float m_LayerTolerance     = 0.025f;
-        [SerializeField] private   float m_RigidBodyTolerance = 0.015f;
-        [SerializeField] private   float m_FallDownGravity    = 4f;
-        [SerializeField] protected float JumpForce            = 10f;
-        [SerializeField] protected float ExtendJumpTimeLimit  = 0.2f;
-
-        protected BoxCollider2D  BoxCollider  { get; private set; }
-        protected LayerMask      GroundLayer  { get; private set; }
+        [Header("Shared Properties")]
+        [SerializeField] protected float JumpForce           = 10f;
+        [SerializeField] protected float ExtendJumpTimeLimit = 0.2f;
 
         protected bool           ApplyJumpForce;
         protected bool           IsJumpOwner;
         protected float          JumpTime;
         protected TriggerState   TriggerState;
         protected JumpState      JumpState;
-        protected BehaviourState JumpBehaviourState;
+        protected VerticalState  VerticalState;
+        protected BehaviourState BehaviourState;
 
-        private float   m_VerticalCheckDistance;
-        private Vector2 m_BoxColliderLocalSize;
+        #region Unity Pipeline
 
         protected override void Awake()
         {
             base.Awake();
 
-            GroundLayer = LayerMask.GetMask("Ground");
-            BoxCollider = GetComponent<BoxCollider2D>();
-
-            m_BoxColliderLocalSize  = BoxCollider.size * transform.localScale;
-            m_VerticalCheckDistance = m_BoxColliderLocalSize.y / 2 + m_LayerTolerance;
-
-            SetAvailabilityJump(new JumpBehaviourStateParams(BehaviourState.Enable));
+            SetJumpBehaviourState(new JumpBehaviourStateParams(BehaviourState.Enable));
             SetTriggerState(new PerformJumpParams(TriggerState.Default));
             SetJumpState(new JumpStateParams(JumpState.Default));
         }
 
         protected virtual void OnEnable()
         {
-            Entity.Events.OnPerformJump         += SetTriggerState;
-            Entity.Events.OnJumpState           += SetJumpState;
-            Entity.Events.OnJumpBehaviourState  += SetAvailabilityJump;
+            Entity.Events.OnPerformJump               += SetTriggerState;
+            Entity.Events.OnJumpState                 += SetJumpState;
+            Entity.Events.OnEntityVerticalStateChange += SetVerticalState;
+            Entity.Events.OnJumpBehaviourStateChange  += SetJumpBehaviourState;
         }
-
+        
         protected virtual void OnDisable()
         {
-            Entity.Events.OnPerformJump         -= SetTriggerState;
-            Entity.Events.OnJumpState           -= SetJumpState;
-            Entity.Events.OnJumpBehaviourState  -= SetAvailabilityJump;
+            Entity.Events.OnPerformJump               -= SetTriggerState;
+            Entity.Events.OnJumpState                 -= SetJumpState;
+            Entity.Events.OnEntityVerticalStateChange -= SetVerticalState;
+            Entity.Events.OnJumpBehaviourStateChange  -= SetJumpBehaviourState;
         }
 
         protected virtual void SetTriggerState(PerformJumpParams performJumpParams)
@@ -63,28 +53,28 @@ namespace BloodWork.Jump
 
         protected virtual void SetJumpState(JumpStateParams jumpStateParams)
         {
-            if (IsJumpOwner && JumpState == JumpState.Default)
-                Entity.Gravity -= GetInstanceID();
-
             JumpState      = jumpStateParams.JumpState;
             IsJumpOwner    = jumpStateParams.InstanceID == GetInstanceID() &&
-                             jumpStateParams.JumpState != JumpState.Default;
+                             jumpStateParams.JumpState == JumpState.Jumping;
             ApplyJumpForce = IsJumpOwner && ApplyJumpForce;
-
-            if (IsJumpOwner && JumpState == JumpState.Falling)
-                Entity.Gravity += (Priority.Medium, m_FallDownGravity, GetInstanceID());
         }
 
-        private void SetAvailabilityJump(JumpBehaviourStateParams jumpBehaviourStateParams)
+        private void SetVerticalState(EntityVerticalStateParams entityVerticalStateParams)
         {
-            JumpBehaviourState = jumpBehaviourStateParams.State;
+            VerticalState = entityVerticalStateParams.VerticalState;
+
+            if (IsJumpOwner && VerticalState is VerticalState.OnGround or VerticalState.OnWall)
+                Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState.Default));
         }
 
-        protected virtual void NotifyCurrentState()
+        private void SetJumpBehaviourState(JumpBehaviourStateParams jumpBehaviourStateParams)
         {
-            if (Utils.IsChanged(ref JumpState, JumpStates.GetState(Entity.Rigidbody.velocity))) 
-                Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState, GetInstanceID()));
+            BehaviourState = jumpBehaviourStateParams.BehaviourState;
         }
+
+        #endregion
+
+        #region Helper Methods
 
         protected bool IsMinimumJumpTimePassed()
         {
@@ -96,16 +86,16 @@ namespace BloodWork.Jump
             return JumpTime >= ExtendJumpTimeLimit;
         }
 
-        protected bool IsCeilingHit()
-        {
-            return Physics2D.Raycast(transform.position - new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.up, m_VerticalCheckDistance, GroundLayer) ||
-                   Physics2D.Raycast(transform.position + new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.up, m_VerticalCheckDistance, GroundLayer);
-        }
-
         protected bool IsOnGround()
         {
-            return Physics2D.Raycast(transform.position - new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.down, m_VerticalCheckDistance, GroundLayer) ||
-                   Physics2D.Raycast(transform.position + new Vector3(m_BoxColliderLocalSize.x / 2 - m_RigidBodyTolerance, 0), Vector2.down, m_VerticalCheckDistance, GroundLayer);
+            return VerticalState == VerticalState.OnGround;
         }
+
+        protected bool IsCeilingHit()
+        {
+            return Entity.IsCeilingHit();
+        }
+
+        #endregion
     }
 }

@@ -15,18 +15,18 @@ namespace BloodWork.Movement
         protected override void Awake()
         {
             base.Awake();
-            ChangeState(new MoveStateParams(BehaviourState.Enable));
+            ChangeState(new MoveDirectionChangeParams(BehaviourState.Enable));
         }
 
         private void OnEnable()
         {
-            Entity.Events.OnPerformMove += SetDirection;
-            Entity.Events.OnMoveStateEvent += ChangeState;
+            Entity.Events.OnPerformMove         += SetDirection;
+            Entity.Events.OnMoveDirectionChange += ChangeState;
         }
 
-        private void ChangeState(MoveStateParams controllerStateParams)
+        private void ChangeState(MoveDirectionChangeParams moveDirectionChangeParams)
         {
-            State = controllerStateParams.State;
+            State = moveDirectionChangeParams.State;
         }
 
         private void OnDisable()
@@ -34,9 +34,9 @@ namespace BloodWork.Movement
             Entity.Events.OnPerformMove -= SetDirection;
         }
 
-        private void SetDirection(Move move)
+        private void SetDirection(PerformMoveParams performMoveParams)
         {
-            m_Direction = move.Direction;
+            m_Direction = performMoveParams.Direction;
             SetLookDirection();
         }
 
@@ -54,6 +54,7 @@ namespace BloodWork.Movement
         {
             if (State == BehaviourState.Disable)
                 return;
+
             Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_MaxSpeed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
         }
     }

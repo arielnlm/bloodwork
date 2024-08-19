@@ -1,24 +1,29 @@
 using BloodWork.Entity.EventParams;
-using System;
-using BloodWork.Commons;
 using BloodWork.Entity.EventParams.Ability;
+using System;
 
 namespace BloodWork.Entity
 {
     public struct Events
     {
-        #region Movement
+        #region Entity
 
-        public Action<Move> OnPerformMove;
-        public Action<MoveStateParams> OnMoveStateEvent;
+        public Action<EntityVerticalStateParams> OnEntityVerticalStateChange;
+
+        #endregion
+
+        #region Move
+
+        public Action<PerformMoveParams>         OnPerformMove;
+        public Action<MoveDirectionChangeParams> OnMoveDirectionChange;
 
         #endregion
 
         #region Jump
 
-        public Action<JumpBehaviourStateParams> OnJumpBehaviourState;
-        public Action<PerformJumpParams> OnPerformJump;
-        public Action<JumpStateParams> OnJumpState;
+        public Action<JumpBehaviourStateParams> OnJumpBehaviourStateChange;
+        public Action<PerformJumpParams>        OnPerformJump;
+        public Action<JumpStateParams>          OnJumpState;
         
         #endregion
 
@@ -40,7 +45,7 @@ namespace BloodWork.Entity
 
         #region Controller
 
-        public Action<ControllerStateParams> OnControllerState;
+        public Action<ControllerStateParams> OnControllerStateChange;
 
         #endregion
     }

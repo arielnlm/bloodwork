@@ -7,9 +7,9 @@ namespace BloodWork.Controller
 {
     public class PlayerController : AbstractController
     {
-        protected override Move UpdateMove()
+        protected override PerformMoveParams UpdateMove()
         {
-            return new Move(MoveDirections.ValueOf(Input.GetAxisRaw("Horizontal")));
+            return new PerformMoveParams(MoveDirections.ValueOf(Input.GetAxisRaw("Horizontal")));
         }
 
         protected override PerformJumpParams UpdatePerformJump()

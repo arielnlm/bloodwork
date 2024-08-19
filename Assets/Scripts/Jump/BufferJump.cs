@@ -1,10 +1,13 @@
 ﻿using BloodWork.Commons;
+using BloodWork.Entity.EventParams;
+using BloodWork.Utils;
 using UnityEngine;
 
 namespace BloodWork.Jump
 {
     public sealed class BufferJump : AbstractJump
     {
+        [Header("Buffer Properties")]
         [SerializeField] private float m_BufferTimeLimit = 0.12f;
 
         private float m_BufferTime;
@@ -13,17 +16,25 @@ namespace BloodWork.Jump
         {
             m_BufferTime = TriggerState == TriggerState.Start ? 0 : m_BufferTime + Time.deltaTime;
 
-            if (JumpBehaviourState == BehaviourState.Disable || !IsJumpOwner && JumpState != JumpState.Default)
+            if (BehaviourState == BehaviourState.Disable || !IsJumpOwner && JumpState != JumpState.Default)
                 return;
 
-            if (Utils.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
-                JumpTime = 0;
+            if (!ChangeReference.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
+                return;
+
+            JumpTime = 0;
+            Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState.Jumping, GetInstanceID()));
         }
 
         private bool ShouldApplyJumpForce()
         {
             return ApplyJumpForce && !IsCeilingHit() && (!IsMinimumJumpTimePassed() || (TriggerState == TriggerState.Continue && !IsExtendedTimePassed())) ||
                    !ApplyJumpForce && IsOnGround() && !IsBufferTimePassed();
+        }
+
+        private bool IsBufferTimePassed()
+        {
+            return m_BufferTime > m_BufferTimeLimit;
         }
 
         private void FixedUpdate()
@@ -35,13 +46,6 @@ namespace BloodWork.Jump
                 Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, JumpForce);
 
             JumpTime += Time.fixedDeltaTime;
-
-            NotifyCurrentState();
-        }
-
-        private bool IsBufferTimePassed()
-        {
-            return m_BufferTime > m_BufferTimeLimit;
         }
     }
 }
