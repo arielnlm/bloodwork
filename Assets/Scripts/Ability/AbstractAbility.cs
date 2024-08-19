@@ -1,6 +1,4 @@
 ﻿using BloodWork.Entity;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace BloodWork.Ability
 {

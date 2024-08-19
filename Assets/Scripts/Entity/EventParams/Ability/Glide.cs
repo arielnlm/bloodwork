@@ -4,11 +4,11 @@ namespace BloodWork.Entity.EventParams.Ability
 {
     public struct PerformGlideParams
     {
-        public TriggerState State;
+        public TriggerState TriggerState;
 
-        public PerformGlideParams(TriggerState state)
+        public PerformGlideParams(TriggerState triggerState)
         {
-            State = state;
+            TriggerState = triggerState;
         }
     }
 }
