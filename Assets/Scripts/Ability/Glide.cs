@@ -9,6 +9,7 @@ namespace BloodWork.Ability
     public class Glide : AbstractAbility
     {
         [SerializeField] private float m_Gravity = .5f;
+        [SerializeField] private float m_StartVelocity = -1f;
 
         private TriggerState  m_TriggerState;
         private VerticalState m_VerticalState;
@@ -46,9 +47,14 @@ namespace BloodWork.Ability
                 return;
 
             if (m_ApplyGravity)
+            {
+                Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, m_StartVelocity);
                 Entity.Gravity += (Priority.High, m_Gravity, GetInstanceID());
+            }
             else
+            {
                 Entity.Gravity -= GetInstanceID();
+            }
         }
 
         private bool ShouldApplyGravity()
