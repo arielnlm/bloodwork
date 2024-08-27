@@ -12,6 +12,7 @@ namespace BloodWork.Commons
                > 0                        => VerticalState.Rising,
                < 0                        => VerticalState.Falling,
                0 when entity.IsOnGround() => VerticalState.OnGround,
+               0 when entity.IsOnWall()   => VerticalState.OnWall,
                0                          => VerticalState.Constant,
                _                          => throw new NotFiniteNumberException()
             };
