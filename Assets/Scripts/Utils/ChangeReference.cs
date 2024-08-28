@@ -6,9 +6,9 @@
     /// <typeparam name="Type">Variable's type</typeparam>
     public class ChangeReference<Type>
     {
-        private readonly Type m_OldValue;
-        private readonly Type m_NewValue;
-        private readonly bool m_IsChanged;
+        public Type OldValue  { get; }
+        public Type NewValue  { get; }
+        public bool IsChanged { get; }
 
         /// <summary>
         /// Assigns newValue to the variableReference.
@@ -17,24 +17,15 @@
         /// <param name="newValue">New Value</param>
         public ChangeReference(ref Type variableReference, in Type newValue)
         {
-            m_IsChanged = !variableReference.Equals(newValue);
+            IsChanged = !variableReference.Equals(newValue);
 
-            if (!m_IsChanged)
+            if (!IsChanged)
                 return;
 
-            m_OldValue = variableReference;
-            m_NewValue = newValue;
+            OldValue = variableReference;
+            NewValue = newValue;
 
             variableReference = newValue;
-        }
-
-        /// <summary>
-        /// Returns boolean value whether variable reference was changed.
-        /// </summary>
-        /// <returns>true if reference was changed, false otherwise</returns>
-        public bool IsChanged()
-        {
-            return m_IsChanged;
         }
 
         /// <summary>
@@ -44,7 +35,7 @@
         /// <returns>true if reference was changed to target value, false otherwise</returns>
         public bool IsChangedTo(Type targetValue)
         {
-            return m_IsChanged && m_NewValue.Equals(targetValue);
+            return IsChanged && NewValue.Equals(targetValue);
         }
 
         /// <summary>
@@ -54,7 +45,7 @@
         /// <returns>true if reference was changed from target value, false otherwise</returns>
         public bool IsChangedFrom(Type targetValue)
         {
-            return m_IsChanged && m_OldValue.Equals(targetValue);
+            return IsChanged && OldValue.Equals(targetValue);
         }
     }
 
@@ -82,7 +73,7 @@
         /// <returns>true if reference was changed, false otherwise</returns>
         public static bool IsChanged<Type>(ref Type variableReference, in Type newValue)
         {
-            return Of(ref variableReference, newValue).IsChanged();
+            return Of(ref variableReference, newValue).IsChanged;
         }
 
         /// <summary>

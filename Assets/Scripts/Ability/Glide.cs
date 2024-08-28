@@ -11,9 +11,9 @@ namespace BloodWork.Ability
         [SerializeField] private float m_Gravity = .5f;
         [SerializeField] private float m_StartVelocity = -1f;
 
-        private TriggerState  m_TriggerState;
-        private VerticalState m_VerticalState;
-        private bool          m_ApplyGravity;
+        private TriggerState           m_TriggerState;
+        private EntityEnvironmentState m_EnvironmentState;
+        private bool                   m_ApplyGravity;
 
         private void OnEnable()
         {
@@ -27,9 +27,9 @@ namespace BloodWork.Ability
             Entity.Events.OnEntityVerticalStateChange -= SetMovementState;
         }
 
-        private void SetMovementState(EntityVerticalStateParams entityVerticalStateParams)
+        private void SetMovementState(EntityEnvironmentStateParams entityEnvironmentStateParams)
         {
-            m_VerticalState = entityVerticalStateParams.VerticalState;
+            m_EnvironmentState = entityEnvironmentStateParams.EntityEnvironmentState;
             
             UpdateGravity();
         }
@@ -52,16 +52,14 @@ namespace BloodWork.Ability
                 Entity.Gravity += (Priority.High, m_Gravity, GetInstanceID());
             }
             else
-            {
                 Entity.Gravity -= GetInstanceID();
-            }
         }
 
         private bool ShouldApplyGravity()
         {
-            return m_TriggerState is TriggerState.Start or TriggerState.Continue && m_VerticalState is VerticalState.Falling ||
-                   m_ApplyGravity && m_VerticalState is not (VerticalState.OnGround or VerticalState.OnWall)
-                                  && (m_VerticalState is not VerticalState.Falling || m_TriggerState is not TriggerState.Stop);
+            return m_TriggerState is TriggerState.Start or TriggerState.Continue && m_EnvironmentState is EntityEnvironmentState.Falling ||
+                   m_ApplyGravity && m_EnvironmentState is not (EntityEnvironmentState.OnGround or EntityEnvironmentState.OnWall)
+                                  && (m_EnvironmentState is not EntityEnvironmentState.Falling || m_TriggerState is not TriggerState.Stop);
         }
     }
 }

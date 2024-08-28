@@ -8,7 +8,7 @@ namespace BloodWork.Entity
     {
         #region Entity
 
-        public Action<EntityVerticalStateParams> OnEntityVerticalStateChange;
+        public Action<EntityEnvironmentStateParams> OnEntityVerticalStateChange;
 
         #endregion
 

@@ -11,13 +11,13 @@ namespace BloodWork.Jump
         [SerializeField] protected float JumpForce           = 10f;
         [SerializeField] protected float ExtendJumpTimeLimit = 0.2f;
 
-        protected bool           ApplyJumpForce;
-        protected bool           IsJumpOwner;
-        protected float          JumpTime;
-        protected TriggerState   TriggerState;
-        protected JumpState      JumpState;
-        protected VerticalState  VerticalState;
-        protected BehaviourState BehaviourState;
+        protected bool                   ApplyJumpForce;
+        protected bool                   IsJumpOwner;
+        protected float                  JumpTime;
+        protected TriggerState           TriggerState;
+        protected JumpState              JumpState;
+        protected EntityEnvironmentState EntityEnvironmentState;
+        protected BehaviourState         BehaviourState;
 
         #region Unity Pipeline
 
@@ -59,11 +59,11 @@ namespace BloodWork.Jump
             ApplyJumpForce = IsJumpOwner && ApplyJumpForce;
         }
 
-        private void SetVerticalState(EntityVerticalStateParams entityVerticalStateParams)
+        private void SetVerticalState(EntityEnvironmentStateParams entityEnvironmentStateParams)
         {
-            VerticalState = entityVerticalStateParams.VerticalState;
+            EntityEnvironmentState = entityEnvironmentStateParams.EntityEnvironmentState;
 
-            if (IsJumpOwner && VerticalState is VerticalState.OnGround or VerticalState.OnWall)
+            if (IsJumpOwner && EntityEnvironmentState is EntityEnvironmentState.OnGround or EntityEnvironmentState.OnWall)
                 Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState.Default));
         }
 
@@ -88,12 +88,12 @@ namespace BloodWork.Jump
 
         protected bool IsOnGround()
         {
-            return VerticalState == VerticalState.OnGround;
+            return EntityEnvironmentState == EntityEnvironmentState.OnGround;
         }
 
         protected bool IsCeilingHit()
         {
-            return Entity.IsCeilingHit();
+            return Entity.IsOnCeiling();
         }
 
         #endregion

@@ -2,13 +2,13 @@
 
 namespace BloodWork.Entity.EventParams
 {
-    public struct EntityVerticalStateParams
+    public struct EntityEnvironmentStateParams
     {
-        public VerticalState VerticalState;
+        public EntityEnvironmentState EntityEnvironmentState;
 
-        public EntityVerticalStateParams(VerticalState verticalState)
+        public EntityEnvironmentStateParams(EntityEnvironmentState entityEnvironmentState)
         {
-            VerticalState = verticalState;
+            EntityEnvironmentState = entityEnvironmentState;
         }
     }
 }
