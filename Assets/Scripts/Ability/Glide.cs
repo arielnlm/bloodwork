@@ -46,20 +46,24 @@ namespace BloodWork.Ability
             if (!ChangeReference.IsChanged(ref m_ApplyGravity, ShouldApplyGravity()))
                 return;
 
+
             if (m_ApplyGravity)
             {
                 Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, m_StartVelocity);
                 Entity.Gravity += (Priority.High, m_Gravity, GetInstanceID());
+                Debug.Log("Add glide gravity");
             }
             else
+            {
                 Entity.Gravity -= GetInstanceID();
+                Debug.Log("Remove glide gravity");
+            }
+                
         }
 
         private bool ShouldApplyGravity()
         {
-            return m_TriggerState is TriggerState.Start or TriggerState.Continue && m_EnvironmentState is EntityEnvironmentState.Falling ||
-                   m_ApplyGravity && m_EnvironmentState is not (EntityEnvironmentState.OnGround or EntityEnvironmentState.OnWall)
-                                  && (m_EnvironmentState is not EntityEnvironmentState.Falling || m_TriggerState is not TriggerState.Stop);
+            return m_TriggerState is TriggerState.Start or TriggerState.Continue && m_EnvironmentState is EntityEnvironmentState.Falling;
         }
     }
 }
