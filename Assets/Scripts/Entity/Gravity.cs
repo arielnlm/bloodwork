@@ -11,15 +11,17 @@ namespace BloodWork.Entity
         private readonly Dictionary<Priority, List<float>>               m_GravityMap;
         private readonly Dictionary<int, (Priority priority, int index)> m_IndexMap; // for removing gravity with id
         private readonly Rigidbody2D                                     m_Rigidbody;
+        private readonly IEnumerable<Priority>                           m_Priorities;
 
         public Gravity(Rigidbody2D rigidbody)
         {
-            m_Rigidbody = rigidbody;
+            m_Rigidbody  = rigidbody;
+            m_Priorities = ((Priority[])Enum.GetValues(typeof(Priority))).Reverse();
             
             m_GravityMap = new Dictionary<Priority, List<float>>();
             m_IndexMap   = new Dictionary<int, (Priority priority, int index)>();
 
-            foreach (Priority priority in GetPriorities())
+            foreach (Priority priority in m_Priorities)
                 m_GravityMap.Add(priority, new List<float>());
 
             Add(Priority.Low, rigidbody.gravityScale, 0);
@@ -51,7 +53,7 @@ namespace BloodWork.Entity
 
         public float Get()
         {
-            foreach (Priority priority in GetPriorities())
+            foreach (Priority priority in m_Priorities)
             {
                 if (!m_GravityMap[priority].Any())
                     continue;
@@ -60,11 +62,6 @@ namespace BloodWork.Entity
             }
 
             throw new Exception("Gravity map can't be empty");
-        }
-
-        private IEnumerable<Priority> GetPriorities()
-        {
-            return ((Priority[])Enum.GetValues(typeof(Priority))).Reverse();
         }
 
         public static Gravity operator+(Gravity gravity, (Priority priority, float gravity, int id) item)
