@@ -517,6 +517,7 @@ GameObject:
   - component: {fileID: 943575326}
   - component: {fileID: 943575327}
   - component: {fileID: 943575328}
+  - component: {fileID: 943575329}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -584,10 +585,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.988, y: 1.068, z: 0}
+  m_LocalPosition: {x: 2.69, y: 1.1, z: 0}
   m_LocalScale: {x: 0.39999998, y: 0.39999998, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1563714650}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -751,6 +753,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Gravity: 0.5
   m_StartVelocity: -1
+--- !u!114 &943575329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943575314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa808fbffec87cb42b3d2b9c340e9ae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BloodOrbPrefab: {fileID: 3580121706609760471, guid: ae1816a2a8ef1ee4db83b062e80cf2fc, type: 3}
+  m_PositionOffset: {fileID: 1563714650}
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,6 +878,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &1563714649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1563714650}
+  m_Layer: 0
+  m_Name: GunPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1563714650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1563714649}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.01, y: 0.749, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 943575316}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1840579954
 GameObject:
   m_ObjectHideFlags: 0

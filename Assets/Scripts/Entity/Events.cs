@@ -49,5 +49,21 @@ namespace BloodWork.Entity
         public Action<ControllerStateParams> OnControllerStateChange;
 
         #endregion
+
+        #region Attack
+
+        #region Attack | Melee
+
+        //TODO
+
+        #endregion
+
+        #region Attack | Range
+
+        public Action<PerformBloodOrbAttackParams> OnPerformBloodOrbAttack;
+
+        #endregion
+
+        #endregion
     }
 }

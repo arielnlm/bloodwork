@@ -2,16 +2,18 @@
 using BloodWork.Entity;
 using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
+using BloodWork.Entity.EventParams.Attack;
 using BloodWork.Utils;
 
 namespace BloodWork.Controller
 {
     public abstract class AbstractController : EntityBehaviour
     {
-        protected PerformMoveParams  PerformMove;
-        protected PerformJumpParams  PerformJump;
-        protected PerformDashParams  PerformDash;
-        protected PerformGlideParams PerformGlide;
+        protected PerformMoveParams           PerformMove;
+        protected PerformJumpParams           PerformJump;
+        protected PerformDashParams           PerformDash;
+        protected PerformGlideParams          PerformGlide;
+        protected PerformBloodOrbAttackParams PerformBloodOrbAttack;
 
         protected BehaviourState State;
 
@@ -53,6 +55,9 @@ namespace BloodWork.Controller
 
             if (ChangeReference.IsChanged(ref PerformGlide, UpdateGlide()))
                 Entity.Events.OnPerformGlide?.Invoke(PerformGlide);
+
+            if (ChangeReference.IsChanged(ref PerformBloodOrbAttack, UpdateBloodOrbAttack()))
+                Entity.Events.OnPerformBloodOrbAttack?.Invoke(PerformBloodOrbAttack);
         }
 
         protected virtual PerformMoveParams UpdateMove() => new();
@@ -62,5 +67,7 @@ namespace BloodWork.Controller
         protected virtual PerformDashParams UpdateDash() => new();
 
         protected virtual PerformGlideParams UpdateGlide() => new();
+
+        protected virtual PerformBloodOrbAttackParams UpdateBloodOrbAttack() => new();
     }
 }

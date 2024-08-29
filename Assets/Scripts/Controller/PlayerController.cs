@@ -1,6 +1,7 @@
 ﻿using BloodWork.Commons;
 using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
+using BloodWork.Entity.EventParams.Attack;
 using UnityEngine;
 
 namespace BloodWork.Controller
@@ -27,6 +28,12 @@ namespace BloodWork.Controller
         protected override PerformGlideParams UpdateGlide()
         {
             return new PerformGlideParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.Space)
+                .GetValue()));
+        }
+
+        protected override PerformBloodOrbAttackParams UpdateBloodOrbAttack()
+        {
+            return new PerformBloodOrbAttackParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.Mouse0)
                 .GetValue()));
         }
     }
