@@ -1,6 +1,7 @@
 using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
 using System;
+using BloodWork.Entity.EventParams.Attack;
 
 namespace BloodWork.Entity
 {
@@ -15,7 +16,7 @@ namespace BloodWork.Entity
         #region Move
 
         public Action<PerformMoveParams>         OnPerformMove;
-        public Action<MoveDirectionChangeParams> OnMoveDirectionChange;
+        public Action<MoveBehaviourStateParams> OnMoveDirectionChange;
 
         #endregion
 

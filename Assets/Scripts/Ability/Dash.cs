@@ -37,7 +37,7 @@ namespace BloodWork.Ability
 
 
             m_IsActive = true;
-            Entity.Events.OnMoveDirectionChange?.Invoke(new MoveDirectionChangeParams(BehaviourState.Disable));
+            Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
             Entity.Events.OnJumpBehaviourStateChange?.Invoke(new JumpBehaviourStateParams(BehaviourState.Disable));
         }
 
@@ -53,7 +53,7 @@ namespace BloodWork.Ability
             m_IsActive = m_ActiveTimeCounter <= m_ActiveTime;
             if (!m_IsActive)
             {
-                Entity.Events.OnMoveDirectionChange?.Invoke(new MoveDirectionChangeParams(BehaviourState.Enable));
+                Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
                 Entity.Events.OnJumpBehaviourStateChange?.Invoke(new JumpBehaviourStateParams(BehaviourState.Enable));
             }
         }

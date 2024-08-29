@@ -12,11 +12,11 @@ namespace BloodWork.Entity.EventParams
         }
     }
 
-    public struct MoveDirectionChangeParams
+    public struct MoveBehaviourStateParams
     {
         public BehaviourState State;
 
-        public MoveDirectionChangeParams(BehaviourState state)
+        public MoveBehaviourStateParams(BehaviourState state)
         {
             State = state;
         }
