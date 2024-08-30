@@ -36,5 +36,10 @@ namespace BloodWork.Controller
             return new PerformBloodOrbAttackParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.Mouse0)
                 .GetValue()));
         }
+
+        protected override GamePauseParams UpdatePause()
+        {
+            return new GamePauseParams(KeyStates.GetState(KeyCode.Escape) == KeyState.Pressed ? !GamePause.Pause : GamePause.Pause);
+        }
     }
 }

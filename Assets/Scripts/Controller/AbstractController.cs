@@ -4,11 +4,13 @@ using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
 using BloodWork.Entity.EventParams.Attack;
 using BloodWork.Utils;
+using UnityEngine;
 
 namespace BloodWork.Controller
 {
     public abstract class AbstractController : EntityBehaviour
     {
+        protected GamePauseParams             GamePause;
         protected PerformMoveParams           PerformMove;
         protected PerformJumpParams           PerformJump;
         protected PerformDashParams           PerformDash;
@@ -58,7 +60,11 @@ namespace BloodWork.Controller
 
             if (ChangeReference.IsChanged(ref PerformBloodOrbAttack, UpdateBloodOrbAttack()))
                 Entity.Events.OnPerformBloodOrbAttack?.Invoke(PerformBloodOrbAttack);
+
+            if (ChangeReference.IsChanged(ref GamePause, UpdatePause()))
+                Time.timeScale = GamePause.Pause ? 0 : 1;
         }
+
 
         protected virtual PerformMoveParams UpdateMove() => new();
 
@@ -69,5 +75,7 @@ namespace BloodWork.Controller
         protected virtual PerformGlideParams UpdateGlide() => new();
 
         protected virtual PerformBloodOrbAttackParams UpdateBloodOrbAttack() => new();
+
+        protected virtual GamePauseParams UpdatePause() => new();
     }
 }

@@ -11,4 +11,14 @@ namespace BloodWork.Entity.EventParams
             State = state;
         }
     }
+
+    public struct GamePauseParams
+    {
+        public bool Pause;
+
+        public GamePauseParams(bool pause)
+        {
+            Pause = pause;
+        }
+    }
 }
