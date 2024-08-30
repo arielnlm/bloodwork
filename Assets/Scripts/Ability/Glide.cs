@@ -49,16 +49,11 @@ namespace BloodWork.Ability
 
             if (m_ApplyGravity)
             {
-                Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, m_StartVelocity);
-                Entity.Gravity += (Priority.High, m_Gravity, GetInstanceID());
-                Debug.Log("Add glide gravity");
+                Entity.Rigidbody.velocity =  new Vector2(Entity.Rigidbody.velocity.x, m_StartVelocity);
+                Entity.Gravity            += (Priority.High, m_Gravity, GetInstanceID());
             }
             else
-            {
                 Entity.Gravity -= GetInstanceID();
-                Debug.Log("Remove glide gravity");
-            }
-                
         }
 
         private bool ShouldApplyGravity()
