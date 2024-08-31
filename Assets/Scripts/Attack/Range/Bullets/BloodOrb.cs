@@ -2,7 +2,7 @@
 
 namespace BloodWork.Attack.Range.Bullets
 {
-    public sealed class BloodOrb : MonoBehaviour
+    public sealed class BloodOrb : AbstractAmmo
     {
         [SerializeField] private float m_Speed = 10f;
         [SerializeField] private float m_Gravity = 0f;

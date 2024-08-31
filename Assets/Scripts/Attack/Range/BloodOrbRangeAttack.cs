@@ -7,8 +7,6 @@ namespace BloodWork.Attack.Range
 {
     public sealed class BloodOrbRangeAttack : AbstractRangeAttack
     {
-
-        [SerializeField] private BloodOrb m_BloodOrbPrefab;
         [SerializeField] private Transform m_PositionOffset;
 
         private TriggerState m_TriggerState;
@@ -35,7 +33,13 @@ namespace BloodWork.Attack.Range
             if (m_TriggerState != TriggerState.Start)
                 return;
 
-            Instantiate(m_BloodOrbPrefab, m_PositionOffset.position, CalculateRotation());
+            AbstractAmmo ammo = GetPooledAmmo();
+            if (ammo == null)
+                return;
+
+            ammo.transform.position = m_PositionOffset.position;
+            ammo.transform.rotation = CalculateRotation();
+            ammo.gameObject.SetActive(true);
         }
 
         private Quaternion CalculateRotation()
