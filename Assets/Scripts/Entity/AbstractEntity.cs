@@ -73,7 +73,7 @@ namespace BloodWork.Entity
                 Gravity -= GetInstanceID();
         }
 
-        protected virtual void Update()
+        protected virtual void FixedUpdate()
         {
             if (ChangeReference.IsChanged(ref EntityEnvironmentStateParams, UpdateEntityEnvironmentState()))
                 Events.OnEntityVerticalStateChange?.Invoke(EntityEnvironmentStateParams);
