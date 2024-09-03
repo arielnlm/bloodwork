@@ -1,43 +1,64 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace BloodWork.ScriptableObjects.Jump
 {
-    [CreateAssetMenu(fileName = "Jump", menuName = "Bloodwork/Jump/Jump", order = 0)]
-    public class JumpSO : ScriptableObject
+    public abstract class JumpSO : ScriptableObject
     {
         private static float s_JumpForce;
         private static float s_ExtendJumpTimeLimit;
 
-        protected static Action OnJumpForceChange;
-        protected static Action OnExtendJumpTimeLimitChange;
-
+        protected static Action OnJumpValuesChange;
+        
         [field: Header("Shared Properties")]
         [field: SerializeField] public float JumpForce           { get; private set; }
         [field: SerializeField] public float ExtendJumpTimeLimit { get; private set; }
-
+        
         private void OnEnable()
         {
-            JumpForce           = s_JumpForce;
-            ExtendJumpTimeLimit = s_ExtendJumpTimeLimit;
+            SyncAndSave();
 
-            OnJumpForceChange           += () => JumpForce           = s_JumpForce;
-            OnExtendJumpTimeLimitChange += () => ExtendJumpTimeLimit = s_ExtendJumpTimeLimit;
+            OnJumpValuesChange += SyncAndSave;
         }
 
         private void OnDisable()
         {
-            OnJumpForceChange           -= () => JumpForce           = s_JumpForce;
-            OnExtendJumpTimeLimitChange -= () => ExtendJumpTimeLimit = s_ExtendJumpTimeLimit;
+            OnJumpValuesChange -= SyncAndSave;
         }
 
         private void OnValidate()
         {
-            s_JumpForce = JumpForce;
+            UpdateSharedValues();
+    
+            OnJumpValuesChange?.Invoke();
+        }
+        
+        protected virtual void UpdateSharedValues()
+        {
+            s_JumpForce           = JumpForce;
             s_ExtendJumpTimeLimit = ExtendJumpTimeLimit;
+        }
+        
+        protected virtual void SyncAndSave()
+        {
+            if (!IsValid())
+                return;
             
-            OnJumpForceChange?.Invoke();
-            OnExtendJumpTimeLimitChange?.Invoke();
+            JumpForce           = s_JumpForce;
+            ExtendJumpTimeLimit = s_ExtendJumpTimeLimit;
+            
+            EditorUtility.SetDirty(this);
+        }
+        
+        private bool IsValid()
+        {
+            if (this)
+                return true;
+            
+            OnJumpValuesChange -= SyncAndSave;
+            
+            return false;
         }
     }
 }
