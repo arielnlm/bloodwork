@@ -14,7 +14,6 @@ namespace BloodWork.ScriptableObjects.Jump
         [field: SerializeField] public float JumpForce           { get; private set; }
         [field: SerializeField] public float ExtendJumpTimeLimit { get; private set; }
 
-
         protected override void Subscribe()
         {
             OnJumpValuesChange += SyncLocalValuesAndSave;

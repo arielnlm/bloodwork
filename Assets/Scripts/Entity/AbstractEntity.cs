@@ -49,17 +49,17 @@ namespace BloodWork.Entity
 
             EntityEnvironmentStateParams = new EntityEnvironmentStateParams(EntityEnvironmentState.Initial);
 
-            Events.OnEntityVerticalStateChange?.Invoke(EntityEnvironmentStateParams);
+            Events.OnEntityEnvironmentStateChange?.Invoke(EntityEnvironmentStateParams);
         }
 
         protected void OnEnable()
         {
-            Events.OnEntityVerticalStateChange += UpdateFallDownGravity;
+            Events.OnEntityEnvironmentStateChange += UpdateFallDownGravity;
         }
 
         protected void OnDisable()
         {
-            Events.OnEntityVerticalStateChange -= UpdateFallDownGravity;
+            Events.OnEntityEnvironmentStateChange -= UpdateFallDownGravity;
         }
 
         private void UpdateFallDownGravity(EntityEnvironmentStateParams entityEnvironmentStateParams)
@@ -76,7 +76,7 @@ namespace BloodWork.Entity
         protected virtual void FixedUpdate()
         {
             if (ChangeReference.IsChanged(ref EntityEnvironmentStateParams, UpdateEntityEnvironmentState()))
-                Events.OnEntityVerticalStateChange?.Invoke(EntityEnvironmentStateParams);
+                Events.OnEntityEnvironmentStateChange?.Invoke(EntityEnvironmentStateParams);
         }
 
         protected virtual EntityEnvironmentStateParams UpdateEntityEnvironmentState()

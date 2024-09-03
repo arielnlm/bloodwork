@@ -34,7 +34,7 @@ namespace BloodWork.Jump
         {
             Entity.Events.OnPerformJump               += SetTriggerState;
             Entity.Events.OnJumpState                 += SetJumpState;
-            Entity.Events.OnEntityVerticalStateChange += SetVerticalState;
+            Entity.Events.OnEntityEnvironmentStateChange += SetVerticalState;
             Entity.Events.OnJumpBehaviourStateChange  += SetJumpBehaviourState;
         }
         
@@ -42,7 +42,7 @@ namespace BloodWork.Jump
         {
             Entity.Events.OnPerformJump               -= SetTriggerState;
             Entity.Events.OnJumpState                 -= SetJumpState;
-            Entity.Events.OnEntityVerticalStateChange -= SetVerticalState;
+            Entity.Events.OnEntityEnvironmentStateChange -= SetVerticalState;
             Entity.Events.OnJumpBehaviourStateChange  -= SetJumpBehaviourState;
         }
 

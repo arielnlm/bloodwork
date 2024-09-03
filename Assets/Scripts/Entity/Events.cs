@@ -1,6 +1,6 @@
+using System;
 using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
-using System;
 using BloodWork.Entity.EventParams.Attack;
 
 namespace BloodWork.Entity
@@ -9,7 +9,7 @@ namespace BloodWork.Entity
     {
         #region Entity
 
-        public Action<EntityEnvironmentStateParams> OnEntityVerticalStateChange;
+        public Action<EntityEnvironmentStateParams> OnEntityEnvironmentStateChange;
 
         #endregion
 

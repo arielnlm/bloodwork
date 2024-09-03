@@ -18,13 +18,13 @@ namespace BloodWork.Ability
         private void OnEnable()
         {
             Entity.Events.OnPerformGlide              += SetTriggerState;
-            Entity.Events.OnEntityVerticalStateChange += SetMovementState;
+            Entity.Events.OnEntityEnvironmentStateChange += SetMovementState;
         }
 
         private void OnDisable()
         {
             Entity.Events.OnPerformGlide              -= SetTriggerState;
-            Entity.Events.OnEntityVerticalStateChange -= SetMovementState;
+            Entity.Events.OnEntityEnvironmentStateChange -= SetMovementState;
         }
 
         private void SetMovementState(EntityEnvironmentStateParams entityEnvironmentStateParams)
