@@ -1,10 +1,9 @@
 ﻿using System;
-using UnityEditor;
 using UnityEngine;
 
 namespace BloodWork.ScriptableObjects.Jump
 {
-    public abstract class JumpSO : ScriptableObject
+    public abstract class JumpSO : SharedSO
     {
         private static float s_JumpForce;
         private static float s_ExtendJumpTimeLimit;
@@ -14,51 +13,33 @@ namespace BloodWork.ScriptableObjects.Jump
         [field: Header("Shared Properties")]
         [field: SerializeField] public float JumpForce           { get; private set; }
         [field: SerializeField] public float ExtendJumpTimeLimit { get; private set; }
-        
-        private void OnEnable()
-        {
-            SyncAndSave();
 
-            OnJumpValuesChange += SyncAndSave;
+
+        protected override void Subscribe()
+        {
+            OnJumpValuesChange += SyncLocalValuesAndSave;
         }
 
-        private void OnDisable()
+        protected override void Unsubscribe()
         {
-            OnJumpValuesChange -= SyncAndSave;
+            OnJumpValuesChange -= SyncLocalValuesAndSave;
         }
 
-        private void OnValidate()
+        protected override void Dispatch()
         {
-            UpdateSharedValues();
-    
             OnJumpValuesChange?.Invoke();
         }
-        
-        protected virtual void UpdateSharedValues()
+
+        protected override void SyncSharedValues()
         {
             s_JumpForce           = JumpForce;
             s_ExtendJumpTimeLimit = ExtendJumpTimeLimit;
         }
-        
-        protected virtual void SyncAndSave()
+
+        protected override void SyncLocalValues()
         {
-            if (!IsValid())
-                return;
-            
             JumpForce           = s_JumpForce;
             ExtendJumpTimeLimit = s_ExtendJumpTimeLimit;
-            
-            EditorUtility.SetDirty(this);
-        }
-        
-        private bool IsValid()
-        {
-            if (this)
-                return true;
-            
-            OnJumpValuesChange -= SyncAndSave;
-            
-            return false;
         }
     }
 }
