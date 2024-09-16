@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using BloodWork.Manager.GameManager;
+using UnityEngine;
 
 namespace BloodWork.Entity
 {
@@ -6,9 +7,13 @@ namespace BloodWork.Entity
     {
         protected AbstractEntity Entity { get; private set; }
 
+        protected GameManager GameManager { get; private set; }
+
         protected virtual void Awake()
         {
             Entity = GetComponent<AbstractEntity>();
+
+            GameManager = GameManager.Instantiate();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Text;
 using BloodWork.Commons;
 using BloodWork.Commons.Types;
 using BloodWork.Entity.EventParams;
+using BloodWork.Manager.GameManager;
 using BloodWork.Utils;
 using UnityEngine;
 

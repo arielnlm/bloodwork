@@ -46,6 +46,12 @@ namespace BloodWork.Controller
             if (State == BehaviourState.Disable)
                 return;
 
+            if (ChangeReference.IsChanged(ref GamePause, UpdatePause()))
+                GameManager.Events.OnGamePause?.Invoke(GamePause);
+
+            if (GameManager.IsGamePaused())
+                return;
+
             if (ChangeReference.IsChanged(ref PerformMove, UpdateMove()))
                 Entity.Events.OnPerformMove?.Invoke(PerformMove);
 
@@ -60,11 +66,7 @@ namespace BloodWork.Controller
 
             if (ChangeReference.IsChanged(ref PerformBloodOrbAttack, UpdateBloodOrbAttack()))
                 Entity.Events.OnPerformBloodOrbAttack?.Invoke(PerformBloodOrbAttack);
-
-            if (ChangeReference.IsChanged(ref GamePause, UpdatePause()))
-                Time.timeScale = GamePause.Pause ? 0 : 1;
         }
-
 
         protected virtual PerformMoveParams UpdateMove() => new();
 
