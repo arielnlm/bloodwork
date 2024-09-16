@@ -104,9 +104,11 @@ namespace BloodWork.Entity
                 throw new Exception(stringBuilder.ToString());
             }
 
-            if (contactPoints[0].point.x - contactPoints[1].point.x == 0)
+            float xDifference = Math.Abs(contactPoints[0].point.x - contactPoints[1].point.x);
+            float yDifference = Math.Abs(contactPoints[0].point.y - contactPoints[1].point.y);
+            if (xDifference < 0.01f)
                 Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
-            else if (contactPoints[0].point.y - contactPoints[1].point.y == 0)
+            else if (yDifference < 0.01f)
                 Environment += (collision.gameObject.GetInstanceID(),
                                 (contactPoints[0].point.y - transform.position.y) switch
                                 { 
