@@ -46,11 +46,19 @@ namespace BloodWork.Jump
             Entity.Events.OnJumpBehaviourStateChange  -= SetJumpBehaviourState;
         }
 
+        /// <summary>
+        /// Sets current key state (press, hold, let go, ...)
+        /// </summary>
+        /// <param name="performJumpParams">Holds the current key state</param>
         protected virtual void SetTriggerState(PerformJumpParams performJumpParams)
         {
             TriggerState = performJumpParams.TriggerState;
         }
 
+        /// <summary>
+        /// Sets current jump state ( not jumping, jumping)
+        /// </summary>
+        /// <param name="jumpStateParams">Holds the current jump state</param>
         protected virtual void SetJumpState(JumpStateParams jumpStateParams)
         {
             JumpState      = jumpStateParams.JumpState;
@@ -76,11 +84,19 @@ namespace BloodWork.Jump
 
         #region Helper Methods
 
+        /// <summary>
+        /// Checks if at least one physics frame has passed (so that player cant press jump and let go before physics is updated)
+        /// </summary>
+        /// <returns>true if one physics frame has passed since jump is pressed</returns>
         protected bool IsMinimumJumpTimePassed()
         {
             return JumpTime >= Time.fixedDeltaTime;
         }
 
+        /// <summary>
+        /// Checks if jump is held longer than its possible
+        /// </summary>
+        /// <returns>true if jump is held longer than its possible</returns>
         protected bool IsExtendedTimePassed()
         {
             return JumpTime >= ExtendJumpTimeLimit;

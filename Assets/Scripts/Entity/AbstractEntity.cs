@@ -27,11 +27,13 @@ namespace BloodWork.Entity
         protected EntityEnvironmentStateParams EntityEnvironmentStateParams;
 
         protected EntityEnvironmentState EntityEnvironmentState;
-        
+
+        private float m_Tolerance = 0.01f;
         private float   m_VerticalCheckDistance;
         private float   m_HorizontalCheckDistance;
         private Vector2 m_BoxColliderLocalSize;
         private Signum  m_VelocitySign;
+        private MoveDirection m_Direction;
 
         #region Unity Pipeline
 
@@ -56,11 +58,13 @@ namespace BloodWork.Entity
         protected void OnEnable()
         {
             Events.OnEntityEnvironmentStateChange += UpdateFallDownGravity;
+            Events.OnPerformMove += SetDirection;
         }
 
         protected void OnDisable()
         {
             Events.OnEntityEnvironmentStateChange -= UpdateFallDownGravity;
+            Events.OnPerformMove -= SetDirection;
         }
 
         private void UpdateFallDownGravity(EntityEnvironmentStateParams entityEnvironmentStateParams)
@@ -72,6 +76,11 @@ namespace BloodWork.Entity
                     
             if (changeReference.IsChangedFrom(EntityEnvironmentState.Falling))
                 Gravity -= GetInstanceID();
+        }
+
+        private void SetDirection(PerformMoveParams performMoveParams)
+        {
+            m_Direction = performMoveParams.Direction;
         }
 
         protected virtual void FixedUpdate()
@@ -106,9 +115,9 @@ namespace BloodWork.Entity
 
             float xDifference = Math.Abs(contactPoints[0].point.x - contactPoints[1].point.x);
             float yDifference = Math.Abs(contactPoints[0].point.y - contactPoints[1].point.y);
-            if (xDifference < 0.01f)
+            if (xDifference < m_Tolerance)
                 Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
-            else if (yDifference < 0.01f)
+            else if (yDifference < m_Tolerance)
                 Environment += (collision.gameObject.GetInstanceID(),
                                 (contactPoints[0].point.y - transform.position.y) switch
                                 { 
