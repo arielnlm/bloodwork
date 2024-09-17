@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using BloodWork.Assets.Scripts.Commons;
 using BloodWork.Commons;
 using BloodWork.Entity.EventParams;
 using BloodWork.Utils;
@@ -9,16 +10,15 @@ using UnityEngine.Serialization;
 namespace BloodWork.Jump
 {
     //IMPORTANT: For wall jump to work, Player MUST NOT have friction (friction = 0)
-    //TODO ALL Bugs of wall jump will be fixed when OnWall collision is fixed in AbstractEntity
     public sealed class WallJump : AbstractJump
     {
         [Header("Wall Jump Properties")]
         [SerializeField] private float m_WallSlideSpeed = 40f;
         [SerializeField] private float m_HorizontalSpeedAfterJumping = 400f;
-        [SerializeField] private float m_WallJumpTimeLimit = 0.2f;
+        [SerializeField] private float m_WallJumpTimeLimit = 0.06f;
         [SerializeField] private float m_DisableMovementTimeLimit = 0.15f;
 
-        private SideOfWall m_SideOfWall;
+        private EntityWallState m_SideOfWall;
         private float m_MinRange = -4f;
         private float m_MaxRange = float.MaxValue;
         private float m_WallJumpTime;
@@ -45,7 +45,7 @@ namespace BloodWork.Jump
 
         private void Update()
         {
-            m_SideOfWall = GetSideOfWall();
+            m_SideOfWall = Entity.EntityWallState;
             CheckWallJump();
         }
 
@@ -72,9 +72,9 @@ namespace BloodWork.Jump
             float xVelocity = Entity.Rigidbody.velocity.x;
 
 
-            if (m_SideOfWall == SideOfWall.Left)
+            if (m_SideOfWall == EntityWallState.OnWallLeft)
                 xVelocity = m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
-            else if (m_SideOfWall == SideOfWall.Right)
+            else if (m_SideOfWall == EntityWallState.OnWallRight)
                 xVelocity = -m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
 
             return new Vector2(xVelocity, JumpForce);
@@ -108,20 +108,9 @@ namespace BloodWork.Jump
             return m_WallJumpTime > m_WallJumpTimeLimit;
         }
 
-        //TODO: Environment class currently sets state OnWall just when close to wall, not when player is close to wall and is moving in direction of wall
-        private SideOfWall GetSideOfWall()
-        {
-            EntityEnvironmentState state = Entity.Environment.Get();
-
-            if (state != EntityEnvironmentState.OnWall || m_Direction == MoveDirection.Idle)
-                return SideOfWall.None;
-
-            return m_Direction == MoveDirection.Left ? SideOfWall.Left : SideOfWall.Right; 
-        }
-
         private bool IsWallSliding()
         {
-            return m_SideOfWall != SideOfWall.None;
+            return m_SideOfWall != EntityWallState.None;
         }
 
         /// <summary>
@@ -136,13 +125,6 @@ namespace BloodWork.Jump
             yield return new WaitForSeconds(m_DisableMovementTimeLimit);
 
             Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
-        }
-
-        private enum SideOfWall
-        {
-            None,
-            Left,
-            Right
         }
     }
 }

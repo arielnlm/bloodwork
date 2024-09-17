@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using BloodWork.Assets.Scripts.Commons;
 using BloodWork.Commons;
 using BloodWork.Commons.Types;
 using BloodWork.Entity.EventParams;
@@ -23,6 +24,8 @@ namespace BloodWork.Entity
 
         public Gravity     Gravity;
         public Environment Environment;
+
+        public EntityWallState EntityWallState;
 
         protected EntityEnvironmentStateParams EntityEnvironmentStateParams;
 
@@ -116,7 +119,10 @@ namespace BloodWork.Entity
             float xDifference = Math.Abs(contactPoints[0].point.x - contactPoints[1].point.x);
             float yDifference = Math.Abs(contactPoints[0].point.y - contactPoints[1].point.y);
             if (xDifference < m_Tolerance)
+            {
+                UpdateEntityWallState(contactPoints[0].point.x, transform.position.x);
                 Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
+            }
             else if (yDifference < m_Tolerance)
                 Environment += (collision.gameObject.GetInstanceID(),
                                 (contactPoints[0].point.y - transform.position.y) switch
@@ -133,7 +139,19 @@ namespace BloodWork.Entity
             if (1 << collision.gameObject.layer != GroundLayer)
                 return;
 
+            UpdateEntityWallState(0f, 0f);
             Environment -= collision.gameObject.GetInstanceID();
+        }
+
+        private void UpdateEntityWallState(float xCollisionPos, float xCentarPos)
+        {
+
+            if (xCollisionPos < xCentarPos && m_Direction == MoveDirection.Left)
+                EntityWallState = EntityWallState.OnWallLeft;
+            else if (xCollisionPos > xCentarPos && m_Direction == MoveDirection.Right)
+                EntityWallState = EntityWallState.OnWallRight;
+            else
+                EntityWallState = EntityWallState.None;
         }
 
         #endregion

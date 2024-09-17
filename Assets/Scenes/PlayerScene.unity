@@ -327,7 +327,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516722010}
   m_LocalRotation: {x: -0, y: -0, z: 0.70710576, w: 0.70710784}
-  m_LocalPosition: {x: -9.7, y: 1.9733, z: 0}
+  m_LocalPosition: {x: -10.233, y: 1.97, z: 0}
   m_LocalScale: {x: 5.9669957, y: 0.5658, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -807,7 +807,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943575314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.479, y: 1.147, z: 0}
+  m_LocalPosition: {x: -2.18, y: 2.11, z: 0}
   m_LocalScale: {x: 0.39999995, y: 0.39999995, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -876,6 +876,7 @@ MonoBehaviour:
   m_LayerGapTolerance: 0.025
   m_RigidBodyTolerance: 0
   m_FallDownGravity: 4
+  EntityWallState: 0
 --- !u!61 &943575323
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1004,10 +1005,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   JumpForce: 10
   ExtendJumpTimeLimit: 0.2
-  m_WallSlideSpeed: 5
-  m_HorizontalSpeedAfterJumping: 80
-  m_WallJumpTimeLimit: 0.4
-  m_DisableMovementTimeLimit: 0.2
+  m_WallSlideSpeed: 40
+  m_HorizontalSpeedAfterJumping: 400
+  m_WallJumpTimeLimit: 0.06
+  m_DisableMovementTimeLimit: 0.15
 --- !u!1 &1531908780
 GameObject:
   m_ObjectHideFlags: 0
