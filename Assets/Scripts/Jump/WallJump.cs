@@ -18,7 +18,7 @@ namespace BloodWork.Jump
         [SerializeField] private float m_WallJumpTimeLimit = 0.06f;
         [SerializeField] private float m_DisableMovementTimeLimit = 0.15f;
 
-        private EntityWallState m_SideOfWall;
+        private EntityEnvironmentState m_EntityEnviroment;
         private float m_MinRange = -4f;
         private float m_MaxRange = float.MaxValue;
         private float m_WallJumpTime;
@@ -30,6 +30,7 @@ namespace BloodWork.Jump
             base.OnEnable();
             Entity.Events.OnPerformMove += SetDirection;
         }
+
 
         protected override void OnDisable()
         {
@@ -45,7 +46,7 @@ namespace BloodWork.Jump
 
         private void Update()
         {
-            m_SideOfWall = Entity.EntityWallState;
+            m_EntityEnviroment = Entity.Environment.Get();
             CheckWallJump();
         }
 
@@ -72,10 +73,8 @@ namespace BloodWork.Jump
             float xVelocity = Entity.Rigidbody.velocity.x;
 
 
-            if (m_SideOfWall == EntityWallState.OnWallLeft)
-                xVelocity = m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
-            else if (m_SideOfWall == EntityWallState.OnWallRight)
-                xVelocity = -m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
+            if (m_EntityEnviroment == EntityEnvironmentState.OnWall)
+                xVelocity = m_HorizontalSpeedAfterJumping * (-transform.right.x) * Time.fixedDeltaTime;
 
             return new Vector2(xVelocity, JumpForce);
         }
@@ -110,7 +109,7 @@ namespace BloodWork.Jump
 
         private bool IsWallSliding()
         {
-            return m_SideOfWall != EntityWallState.None;
+            return m_EntityEnviroment == EntityEnvironmentState.OnWall;
         }
 
         /// <summary>

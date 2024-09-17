@@ -25,11 +25,12 @@ namespace BloodWork.Entity
         public Gravity     Gravity;
         public Environment Environment;
 
-        public EntityWallState EntityWallState;
 
         protected EntityEnvironmentStateParams EntityEnvironmentStateParams;
 
         protected EntityEnvironmentState EntityEnvironmentState;
+        protected EntityWallState EntityWallState;
+        protected int             EntityWallInstanceID;
 
         private float m_Tolerance = 0.01f;
         private float   m_VerticalCheckDistance;
@@ -37,6 +38,7 @@ namespace BloodWork.Entity
         private Vector2 m_BoxColliderLocalSize;
         private Signum  m_VelocitySign;
         private MoveDirection m_Direction;
+        private bool m_IsWallInEnvironment;
 
         #region Unity Pipeline
 
@@ -62,16 +64,18 @@ namespace BloodWork.Entity
         {
             Events.OnEntityEnvironmentStateChange += UpdateFallDownGravity;
             Events.OnPerformMove += SetDirection;
+            Events.OnWallState += SetWallState;
         }
 
         protected void OnDisable()
         {
             Events.OnEntityEnvironmentStateChange -= UpdateFallDownGravity;
             Events.OnPerformMove -= SetDirection;
+            Events.OnWallState -= SetWallState;
         }
 
         private void UpdateFallDownGravity(EntityEnvironmentStateParams entityEnvironmentStateParams)
-        {
+        {   
             var changeReference = ChangeReference.Of(ref EntityEnvironmentState, entityEnvironmentStateParams.EntityEnvironmentState);
 
             if (changeReference.IsChangedTo(EntityEnvironmentState.Falling))
@@ -84,6 +88,31 @@ namespace BloodWork.Entity
         private void SetDirection(PerformMoveParams performMoveParams)
         {
             m_Direction = performMoveParams.Direction;
+            UpdateEntityWallState2();
+        }
+
+        private void SetWallState(EntityWallStateParams entityWallStateParams)
+        {
+            EntityWallState      = entityWallStateParams.EntityWallState;
+            EntityWallInstanceID = entityWallStateParams.InstanceID;
+
+            UpdateEntityWallState2();
+        }
+
+        private void UpdateEntityWallState2()
+        {
+            //Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
+            if (EntityWallState is EntityWallState.OnWallLeft && m_Direction is MoveDirection.Left ||
+                EntityWallState is EntityWallState.OnWallRight && m_Direction is MoveDirection.Right)
+            {
+                m_IsWallInEnvironment = true;
+                Environment += (EntityWallInstanceID, EntityPlatformState.OnWall);
+            }
+            else if (m_IsWallInEnvironment)
+            {
+                m_IsWallInEnvironment = false;
+                Environment -= (EntityWallInstanceID);
+            }
         }
 
         protected virtual void FixedUpdate()
@@ -120,8 +149,9 @@ namespace BloodWork.Entity
             float yDifference = Math.Abs(contactPoints[0].point.y - contactPoints[1].point.y);
             if (xDifference < m_Tolerance)
             {
-                UpdateEntityWallState(contactPoints[0].point.x, transform.position.x);
-                Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
+                //UpdateEntityWallState(contactPoints[0].point.x, transform.position.x);
+                Events.OnWallState?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(),
+                    contactPoints[0].point.x < transform.position.x ? EntityWallState.OnWallLeft : EntityWallState.OnWallRight));
             }
             else if (yDifference < m_Tolerance)
                 Environment += (collision.gameObject.GetInstanceID(),
@@ -139,8 +169,13 @@ namespace BloodWork.Entity
             if (1 << collision.gameObject.layer != GroundLayer)
                 return;
 
-            UpdateEntityWallState(0f, 0f);
-            Environment -= collision.gameObject.GetInstanceID();
+            //UpdateEntityWallState(0f, 0f);
+
+
+            if (EntityWallInstanceID == collision.gameObject.GetInstanceID())
+                Events.OnWallState?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(), EntityWallState.None));
+            else
+                Environment -= collision.gameObject.GetInstanceID();
         }
 
         private void UpdateEntityWallState(float xCollisionPos, float xCentarPos)

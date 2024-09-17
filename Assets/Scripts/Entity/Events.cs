@@ -10,6 +10,7 @@ namespace BloodWork.Entity
         #region Entity
 
         public Action<EntityEnvironmentStateParams> OnEntityEnvironmentStateChange;
+        public Action<EntityWallStateParams> OnWallState;
 
         #endregion
 
