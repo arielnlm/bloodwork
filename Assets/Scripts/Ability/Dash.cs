@@ -11,7 +11,6 @@ namespace BloodWork.Ability
     {
         
         [SerializeField] private float m_ActiveTime;
-        [SerializeField] private float m_CooldownTime;
         [SerializeField] private float m_Speed;
 
         private TriggerState TriggerState;
@@ -35,10 +34,13 @@ namespace BloodWork.Ability
             if (TriggerState != TriggerState.Start)
                 return;
 
+            if (m_IsOnCoolDown)
+                return;
 
             m_IsActive = true;
-            Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
+            Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
             Entity.Events.OnJumpBehaviourStateChange?.Invoke(new JumpBehaviourStateParams(BehaviourState.Disable));
+            StartCoroutine(Cooldown());
         }
 
         private void FixedUpdate()
@@ -53,7 +55,7 @@ namespace BloodWork.Ability
             m_IsActive = m_ActiveTimeCounter <= m_ActiveTime;
             if (!m_IsActive)
             {
-                Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
+                Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
                 Entity.Events.OnJumpBehaviourStateChange?.Invoke(new JumpBehaviourStateParams(BehaviourState.Enable));
             }
         }

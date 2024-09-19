@@ -17,7 +17,7 @@ namespace BloodWork.Entity
         #region Move
 
         public Action<PerformMoveParams>         OnPerformMove;
-        public Action<MoveBehaviourStateParams> OnMoveDirectionChange;
+        public Action<MoveBehaviourStateParams> OnMoveChangeState;
 
         #endregion
 

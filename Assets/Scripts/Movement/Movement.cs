@@ -21,7 +21,7 @@ namespace BloodWork.Movement
         private void OnEnable()
         {
             Entity.Events.OnPerformMove         += SetDirection;
-            Entity.Events.OnMoveDirectionChange += ChangeState;
+            Entity.Events.OnMoveChangeState     += ChangeState;
         }
 
         private void ChangeState(MoveBehaviourStateParams moveBehaviourStateParams)

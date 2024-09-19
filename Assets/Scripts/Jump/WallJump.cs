@@ -74,7 +74,7 @@ namespace BloodWork.Jump
 
 
             if (m_EntityEnviroment == EntityEnvironmentState.OnWall)
-                xVelocity = m_HorizontalSpeedAfterJumping * (-transform.right.x) * Time.fixedDeltaTime;
+                xVelocity = m_HorizontalSpeedAfterJumping * Entity.transform.right.x * Time.fixedDeltaTime;
 
             return new Vector2(xVelocity, JumpForce);
         }
@@ -119,11 +119,15 @@ namespace BloodWork.Jump
         /// <returns></returns>
         private IEnumerator EnableDisableMovement()
         {
-            Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
+            Vector3 direction = Entity.transform.right;
+
+            Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
+            Entity.transform.right = new Vector3(-direction.x, direction.y, direction.z);
 
             yield return new WaitForSeconds(m_DisableMovementTimeLimit);
 
-            Entity.Events.OnMoveDirectionChange?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
+            Entity.transform.right = direction;
+            Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
         }
     }
 }

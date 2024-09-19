@@ -21,7 +21,7 @@ namespace BloodWork.Controller
 
         protected override PerformDashParams UpdateDash()
         {
-            return new PerformDashParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.X)
+            return new PerformDashParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.LeftShift)
                 .GetValue()));
         }
 

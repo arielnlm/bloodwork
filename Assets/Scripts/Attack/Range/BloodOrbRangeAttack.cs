@@ -1,4 +1,5 @@
-﻿using BloodWork.Attack.Range.Bullets;
+﻿using System.Collections;
+using BloodWork.Attack.Range.Bullets;
 using BloodWork.Commons;
 using BloodWork.Entity.EventParams.Attack;
 using UnityEngine;
@@ -8,8 +9,10 @@ namespace BloodWork.Attack.Range
     public sealed class BloodOrbRangeAttack : AbstractRangeAttack
     {
         [SerializeField] private Transform m_PositionOffset;
+        [SerializeField] private float m_CoolDownTimeLimit;
 
         private TriggerState m_TriggerState;
+        private bool m_IsOnCooldown;
 
         private void OnEnable()
         {
@@ -30,7 +33,7 @@ namespace BloodWork.Attack.Range
 
         private void Attack()
         {
-            if (m_TriggerState != TriggerState.Start)
+            if (m_TriggerState != TriggerState.Start || m_IsOnCooldown)
                 return;
 
             AbstractAmmo ammo = GetPooledAmmo();
@@ -40,6 +43,8 @@ namespace BloodWork.Attack.Range
             ammo.transform.position = m_PositionOffset.position;
             ammo.transform.rotation = CalculateRotation();
             ammo.gameObject.SetActive(true);
+
+            StartCoroutine(Cooldown());
         }
 
         private Quaternion CalculateRotation()
@@ -47,6 +52,15 @@ namespace BloodWork.Attack.Range
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = (mousePosition - (Vector2)m_PositionOffset.position).normalized;
             return Quaternion.FromToRotation(Vector3.right, direction);
+        }
+
+        private IEnumerator Cooldown()
+        {
+            m_IsOnCooldown = true;
+
+            yield return new WaitForSeconds(m_CoolDownTimeLimit);
+
+            m_IsOnCooldown = false;
         }
     }
 }
