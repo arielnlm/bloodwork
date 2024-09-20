@@ -9,6 +9,7 @@ namespace BloodWork.Attack.Range
     public sealed class BloodOrbRangeAttack : AbstractRangeAttack
     {
         [SerializeField] private Transform m_PositionOffset;
+        [SerializeField] private Transform m_AimPosition;
         [SerializeField] private float m_CoolDownTimeLimit;
 
         private TriggerState m_TriggerState;
@@ -45,6 +46,14 @@ namespace BloodWork.Attack.Range
             ammo.gameObject.SetActive(true);
 
             StartCoroutine(Cooldown());
+        }
+
+        private void Update()
+        {
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 direction = (mousePosition - m_AimPosition.position).normalized;
+            float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
+            m_AimPosition.rotation = Quaternion.Euler(0, 0, -angle);
         }
 
         private Quaternion CalculateRotation()

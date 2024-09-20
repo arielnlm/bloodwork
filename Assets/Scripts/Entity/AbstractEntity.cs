@@ -88,7 +88,7 @@ namespace BloodWork.Entity
         private void SetDirection(PerformMoveParams performMoveParams)
         {
             m_Direction = performMoveParams.Direction;
-            UpdateEntityWallState2();
+            UpdateEntityWallState();
         }
 
         private void SetWallState(EntityWallStateParams entityWallStateParams)
@@ -96,10 +96,10 @@ namespace BloodWork.Entity
             EntityWallState      = entityWallStateParams.EntityWallState;
             EntityWallInstanceID = entityWallStateParams.InstanceID;
 
-            UpdateEntityWallState2();
+            UpdateEntityWallState();
         }
 
-        private void UpdateEntityWallState2()
+        private void UpdateEntityWallState()
         {
             //Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
             if (EntityWallState is EntityWallState.OnWallLeft && m_Direction is MoveDirection.Left ||
@@ -149,7 +149,6 @@ namespace BloodWork.Entity
             float yDifference = Math.Abs(contactPoints[0].point.y - contactPoints[1].point.y);
             if (xDifference < m_Tolerance)
             {
-                //UpdateEntityWallState(contactPoints[0].point.x, transform.position.x);
                 Events.OnWallState?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(),
                     contactPoints[0].point.x < transform.position.x ? EntityWallState.OnWallLeft : EntityWallState.OnWallRight));
             }
@@ -169,24 +168,11 @@ namespace BloodWork.Entity
             if (1 << collision.gameObject.layer != GroundLayer)
                 return;
 
-            //UpdateEntityWallState(0f, 0f);
-
 
             if (EntityWallInstanceID == collision.gameObject.GetInstanceID())
                 Events.OnWallState?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(), EntityWallState.None));
             else
                 Environment -= collision.gameObject.GetInstanceID();
-        }
-
-        private void UpdateEntityWallState(float xCollisionPos, float xCentarPos)
-        {
-
-            if (xCollisionPos < xCentarPos && m_Direction == MoveDirection.Left)
-                EntityWallState = EntityWallState.OnWallLeft;
-            else if (xCollisionPos > xCentarPos && m_Direction == MoveDirection.Right)
-                EntityWallState = EntityWallState.OnWallRight;
-            else
-                EntityWallState = EntityWallState.None;
         }
 
         #endregion
