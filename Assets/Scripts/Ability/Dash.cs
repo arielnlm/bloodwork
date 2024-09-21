@@ -14,8 +14,8 @@ namespace BloodWork.Ability
         [SerializeField] private float m_Speed;
 
         private TriggerState TriggerState;
-        private float m_ActiveTimeCounter = 0f;
-        private bool m_IsActive = false;
+        private float m_ActiveTimeCounter;
+        private bool m_IsActive;
         
 
         private void OnEnable()
@@ -34,7 +34,7 @@ namespace BloodWork.Ability
             if (TriggerState != TriggerState.Start)
                 return;
 
-            if (m_IsOnCoolDown)
+            if (IsOnCoolDown)
                 return;
 
             m_IsActive = true;

@@ -22,31 +22,13 @@ namespace BloodWork.Jump
         private float m_MinRange = -4f;
         private float m_MaxRange = float.MaxValue;
         private float m_WallJumpTime;
-        private MoveDirection m_Direction;
-
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            Entity.Events.OnPerformMove += SetDirection;
-        }
-
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            Entity.Events.OnPerformMove -= SetDirection;
-        }
-
-
-        private void SetDirection(PerformMoveParams performMoveParams)
-        {
-            m_Direction = performMoveParams.Direction;
-        }
+        private MoveDirection m_OnWallDirection;
 
         private void Update()
         {
             m_EntityEnviroment = Entity.Environment.Get();
+            if (IsWallSliding())
+                m_OnWallDirection = MoveDirections.ValueOf(Entity.transform.right.x);
             CheckWallJump();
         }
 
@@ -99,7 +81,7 @@ namespace BloodWork.Jump
         private bool ShouldApplyJumpForce()
         {
             return ApplyJumpForce && !IsCeilingHit() && (!IsMinimumJumpTimePassed() || (TriggerState == TriggerState.Continue && !IsExtendedTimePassed())) ||
-                   !ApplyJumpForce && TriggerState == TriggerState.Start && !HasWallJumpTimePassed();
+                   !ApplyJumpForce && TriggerState == TriggerState.Start && (IsWallSliding() || !HasWallJumpTimePassed() && m_OnWallDirection != MoveDirections.ValueOf(Entity.transform.right.x));
         }
 
         private bool HasWallJumpTimePassed()

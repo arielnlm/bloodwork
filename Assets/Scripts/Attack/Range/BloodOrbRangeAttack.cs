@@ -14,6 +14,14 @@ namespace BloodWork.Attack.Range
 
         private TriggerState m_TriggerState;
         private bool m_IsOnCooldown;
+        private Camera m_Camera;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            m_Camera = Camera.main;
+        }
+
 
         private void OnEnable()
         {
@@ -50,7 +58,7 @@ namespace BloodWork.Attack.Range
 
         private void Update()
         {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = m_Camera.ScreenToWorldPoint(Input.mousePosition);
             Vector3 direction = (mousePosition - m_AimPosition.position).normalized;
             float angle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
             m_AimPosition.rotation = Quaternion.Euler(0, 0, -angle);
@@ -58,8 +66,8 @@ namespace BloodWork.Attack.Range
 
         private Quaternion CalculateRotation()
         {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 direction = (mousePosition - (Vector2)m_PositionOffset.position).normalized;
+            Vector2 mousePosition = m_Camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 direction = (mousePosition - (Vector2)m_PositionOffset.position).normalized;
             return Quaternion.FromToRotation(Vector3.right, direction);
         }
 

@@ -8,15 +8,15 @@ namespace BloodWork.Ability
     {
         [SerializeField] protected float CooldownTimeLimit;
 
-        protected bool m_IsOnCoolDown;
+        protected bool IsOnCoolDown;
 
         protected IEnumerator Cooldown()
         {
-            m_IsOnCoolDown = true;
+            IsOnCoolDown = true;
 
             yield return new WaitForSeconds(CooldownTimeLimit);
 
-            m_IsOnCoolDown = false;
+            IsOnCoolDown = false;
         }
 
     }
