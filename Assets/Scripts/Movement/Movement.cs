@@ -37,13 +37,12 @@ namespace BloodWork.Movement
         private void SetDirection(PerformMoveParams performMoveParams)
         {
             m_Direction = performMoveParams.Direction;
-            SetLookDirection();
         }
 
 
         private void SetLookDirection()
         {
-            if (m_Direction == MoveDirection.Idle || State == BehaviourState.Disable)
+            if (m_Direction == MoveDirection.Idle || m_Direction == MoveDirections.ValueOf(Entity.transform.right.x))
                 return;
 
             Vector3 lookDirection = Entity.transform.right;
@@ -54,7 +53,8 @@ namespace BloodWork.Movement
         {
             if (State == BehaviourState.Disable)
                 return;
-            
+
+            SetLookDirection();
             Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_MaxSpeed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
         }
     }

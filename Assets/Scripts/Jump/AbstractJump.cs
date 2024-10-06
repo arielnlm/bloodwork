@@ -71,8 +71,11 @@ namespace BloodWork.Jump
         {
             EntityEnvironmentState = entityEnvironmentStateParams.EntityEnvironmentState;
 
-            if (IsJumpOwner && EntityEnvironmentState is EntityEnvironmentState.OnGround or EntityEnvironmentState.OnWall)
+            if (IsJumpOwner &&
+                EntityEnvironmentState is EntityEnvironmentState.OnGround or EntityEnvironmentState.OnWallLeft or EntityEnvironmentState.OnWallRight)
+            {
                 Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState.Default));
+            }
         }
 
         private void SetJumpBehaviourState(JumpBehaviourStateParams jumpBehaviourStateParams)

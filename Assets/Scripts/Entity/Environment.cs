@@ -33,11 +33,13 @@ namespace BloodWork.Entity
         {
             m_EnvironmentStateMap.Add(EntityPlatformState.OnGround,  EntityEnvironmentState.OnGround);
             m_EnvironmentStateMap.Add(EntityPlatformState.OnCeiling, EntityEnvironmentState.OnCeiling);
-            m_EnvironmentStateMap.Add(EntityPlatformState.OnWall,    EntityEnvironmentState.OnWall);
+            m_EnvironmentStateMap.Add(EntityPlatformState.OnWallLeft,    EntityEnvironmentState.OnWallLeft);
+            m_EnvironmentStateMap.Add(EntityPlatformState.OnWallRight,    EntityEnvironmentState.OnWallRight);
         }
 
         private Environment Add(int id, EntityPlatformState entityPlatformState)
         {
+            //Debug.Log("Add: " + entityPlatformState);
             m_PlatformMap[entityPlatformState] += 1;
 
             m_IdentifierMap.Add(id, entityPlatformState);
@@ -48,7 +50,7 @@ namespace BloodWork.Entity
         private Environment Remove(int id)
         {
             var entityPlatformState = m_IdentifierMap[id];
-
+            //Debug.Log("Remove: " + entityPlatformState);
             m_IdentifierMap.Remove(id);
 
             if (m_PlatformMap[entityPlatformState] == 0)

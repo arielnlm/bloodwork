@@ -1,15 +1,19 @@
 using System;
 using System.Collections;
+using System.Numerics;
 using BloodWork.Assets.Scripts.Commons;
 using BloodWork.Commons;
 using BloodWork.Entity.EventParams;
 using BloodWork.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 namespace BloodWork.Jump
 {
     //IMPORTANT: For wall jump to work, Player MUST NOT have friction (friction = 0)
+    //TODO Huge Jump when holding left and right direction and pressing jump
     public sealed class WallJump : AbstractJump
     {
         [Header("Wall Jump Properties")]
@@ -23,6 +27,8 @@ namespace BloodWork.Jump
         private float m_MaxRange = float.MaxValue;
         private float m_WallJumpTime;
         private MoveDirection m_OnWallDirection;
+        private bool m_OneJumpPassed;
+        private EntityEnvironmentState m_EntityEnviromentOnJump;
 
         private void Update()
         {
@@ -44,26 +50,36 @@ namespace BloodWork.Jump
             if (JumpState == JumpState.Default && !ApplyJumpForce)
                 return;
 
-            if (ApplyJumpForce)
-                Entity.Rigidbody.velocity = GetNewVelocityVector2();
+            if (ApplyJumpForce && !m_OneJumpPassed)
+            {
+                Jump();
+                m_OneJumpPassed = true;
+            }
 
             JumpTime += Time.fixedDeltaTime;
         }
 
-        private Vector2 GetNewVelocityVector2()
+        private void Jump()
         {
             float xVelocity = Entity.Rigidbody.velocity.x;
+            float yVelocity = JumpForce;
 
+            Debug.Log(m_EntityEnviromentOnJump);
+            if (m_EntityEnviromentOnJump is EntityEnvironmentState.OnWallLeft)
+                xVelocity = m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
+            else if (m_EntityEnviromentOnJump is EntityEnvironmentState.OnWallRight)
+                xVelocity = -m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
+            else
+                yVelocity *= 0.8f;
 
-            if (m_EntityEnviroment == EntityEnvironmentState.OnWall)
-                xVelocity = m_HorizontalSpeedAfterJumping * Entity.transform.right.x * Time.fixedDeltaTime;
-
-            return new Vector2(xVelocity, JumpForce);
+            Entity.Rigidbody.velocity = Vector2.zero;
+            Entity.Rigidbody.AddForce(new Vector2(xVelocity, yVelocity), ForceMode2D.Impulse);
         }
 
         private void CheckWallJump()
         {
             m_WallJumpTime = IsWallSliding() ? 0f : m_WallJumpTime + Time.deltaTime;
+            m_OneJumpPassed = ApplyJumpForce && m_OneJumpPassed;
 
             if (BehaviourState == BehaviourState.Disable || !IsJumpOwner && (TriggerState != TriggerState.Start || JumpState == JumpState.Jumping))
                 return;
@@ -71,10 +87,19 @@ namespace BloodWork.Jump
             if (!ChangeReference.IsChangedTo(ref ApplyJumpForce, ShouldApplyJumpForce(), true))
                 return;
 
-            JumpTime = 0f;
+            ReadyForJump();
+        }
 
+        private void ReadyForJump()
+        {
+            JumpTime = 0f;
+            m_EntityEnviromentOnJump = m_EntityEnviroment;
             if (IsWallSliding())
+            {
                 StartCoroutine(EnableDisableMovement());
+                Vector3 direction = Entity.transform.right;
+                Entity.transform.right = new Vector3(-direction.x, direction.y, direction.z);
+            }
             Entity.Events.OnJumpState.Invoke(new JumpStateParams(JumpState.Jumping, GetInstanceID()));
         }
 
@@ -91,24 +116,22 @@ namespace BloodWork.Jump
 
         private bool IsWallSliding()
         {
-            return m_EntityEnviroment == EntityEnvironmentState.OnWall;
+            return m_EntityEnviroment is EntityEnvironmentState.OnWallLeft or EntityEnvironmentState.OnWallRight;
         }
 
         /// <summary>
         /// Player will lose controller of character for some time before getting it back.
-        /// This is so if player is on wall that he cant stick again to the wall immediately after jumping
         /// </summary>
         /// <returns></returns>
+        /// <remarks>
+        /// This is so if player is on wall that he cant stick again to the wall immediately after jumping
+        /// </remarks>
         private IEnumerator EnableDisableMovement()
         {
-            Vector3 direction = Entity.transform.right;
-
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
-            Entity.transform.right = new Vector3(-direction.x, direction.y, direction.z);
 
             yield return new WaitForSeconds(m_DisableMovementTimeLimit);
 
-            Entity.transform.right = direction;
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
         }
     }
