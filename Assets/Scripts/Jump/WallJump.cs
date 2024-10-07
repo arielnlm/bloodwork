@@ -1,12 +1,9 @@
-using System;
 using System.Collections;
-using System.Numerics;
-using BloodWork.Assets.Scripts.Commons;
 using BloodWork.Commons;
+using BloodWork.Commons.Types;
 using BloodWork.Entity.EventParams;
 using BloodWork.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -22,13 +19,13 @@ namespace BloodWork.Jump
         [SerializeField] private float m_WallJumpTimeLimit = 0.06f;
         [SerializeField] private float m_DisableMovementTimeLimit = 0.15f;
 
-        private EntityEnvironmentState m_EntityEnviroment;
-        private float m_MinRange = -4f;
-        private float m_MaxRange = float.MaxValue;
-        private float m_WallJumpTime;
-        private MoveDirection m_OnWallDirection;
-        private bool m_OneJumpPassed;
-        private EntityEnvironmentState m_EntityEnviromentOnJump;
+        private EntityEnvironmentValue m_EntityEnviroment;
+        private float                  m_MinRange = -4f;
+        private float                  m_MaxRange = float.MaxValue;
+        private float                  m_WallJumpTime;
+        private MoveDirection          m_OnWallDirection;
+        private bool                   m_OneJumpPassed;
+        private EntityEnvironmentValue m_EntityEnviromentOnJump;
 
         private void Update()
         {
@@ -65,9 +62,9 @@ namespace BloodWork.Jump
             float yVelocity = JumpForce;
 
             Debug.Log(m_EntityEnviromentOnJump);
-            if (m_EntityEnviromentOnJump is EntityEnvironmentState.OnWallLeft)
+            if (m_EntityEnviromentOnJump == EntityEnvironmentFlag.OnLeftWall)
                 xVelocity = m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
-            else if (m_EntityEnviromentOnJump is EntityEnvironmentState.OnWallRight)
+            else if (m_EntityEnviromentOnJump == EntityEnvironmentFlag.OnRightWall)
                 xVelocity = -m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
             else
                 yVelocity *= 0.8f;
@@ -116,7 +113,7 @@ namespace BloodWork.Jump
 
         private bool IsWallSliding()
         {
-            return m_EntityEnviroment is EntityEnvironmentState.OnWallLeft or EntityEnvironmentState.OnWallRight;
+            return m_EntityEnviroment == EntityEnvironmentFlag.OnWall;
         }
 
         /// <summary>

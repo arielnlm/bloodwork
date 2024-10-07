@@ -1,15 +1,17 @@
 ﻿using BloodWork.Assets.Scripts.Commons;
-using BloodWork.Commons;
+using BloodWork.Commons.Types;
 
 namespace BloodWork.Entity.EventParams
 {
     public struct EntityEnvironmentStateParams
     {
-        public EntityEnvironmentState EntityEnvironmentState;
+        public readonly int                    InstanceID;
+        public readonly EntityEnvironmentValue EntityEnvironmentValue;
 
-        public EntityEnvironmentStateParams(EntityEnvironmentState entityEnvironmentState)
+        public EntityEnvironmentStateParams(EntityEnvironmentValue entityEnvironmentValue = default, int instanceID = 0)
         {
-            EntityEnvironmentState = entityEnvironmentState;
+            InstanceID             = instanceID;
+            EntityEnvironmentValue = entityEnvironmentValue;
         }
     }
 

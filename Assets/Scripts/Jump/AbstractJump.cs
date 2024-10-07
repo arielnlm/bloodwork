@@ -1,4 +1,5 @@
 ﻿using BloodWork.Commons;
+using BloodWork.Commons.Types;
 using BloodWork.Entity;
 using BloodWork.Entity.EventParams;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace BloodWork.Jump
         protected float                  JumpTime;
         protected TriggerState           TriggerState;
         protected JumpState              JumpState;
-        protected EntityEnvironmentState EntityEnvironmentState;
+        protected EntityEnvironmentValue EntityEnvironmentValue;
         protected BehaviourState         BehaviourState;
 
         #region Unity Pipeline
@@ -69,13 +70,12 @@ namespace BloodWork.Jump
 
         private void SetVerticalState(EntityEnvironmentStateParams entityEnvironmentStateParams)
         {
-            EntityEnvironmentState = entityEnvironmentStateParams.EntityEnvironmentState;
+            EntityEnvironmentValue = entityEnvironmentStateParams.EntityEnvironmentValue;
 
-            if (IsJumpOwner &&
-                EntityEnvironmentState is EntityEnvironmentState.OnGround or EntityEnvironmentState.OnWallLeft or EntityEnvironmentState.OnWallRight)
-            {
+            if (IsJumpOwner && (EntityEnvironmentValue == EntityEnvironmentFlag.OnGround   ||
+                                EntityEnvironmentValue == EntityEnvironmentFlag.OnLeftWall ||
+                                EntityEnvironmentValue == EntityEnvironmentFlag.OnRightWall))
                 Entity.Events.OnJumpState?.Invoke(new JumpStateParams(JumpState.Default));
-            }
         }
 
         private void SetJumpBehaviourState(JumpBehaviourStateParams jumpBehaviourStateParams)
@@ -107,7 +107,7 @@ namespace BloodWork.Jump
 
         protected bool IsOnGround()
         {
-            return EntityEnvironmentState == EntityEnvironmentState.OnGround;
+            return EntityEnvironmentValue == EntityEnvironmentFlag.OnGround;
         }
 
         protected bool IsCeilingHit()

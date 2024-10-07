@@ -1,84 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using BloodWork.Commons;
-using UnityEngine;
-using static System.Single;
+using BloodWork.Commons.Types;
 
 namespace BloodWork.Entity
 {
     public class Environment
     {
-        private readonly Dictionary<EntityPlatformState, int>                    m_PlatformMap;
-        private readonly Dictionary<int, EntityPlatformState>                    m_IdentifierMap;
-        private readonly Rigidbody2D                                             m_Rigidbody;
-        private readonly IEnumerable<EntityPlatformState>                        m_PlatformStates;
-        private readonly Dictionary<EntityPlatformState, EntityEnvironmentState> m_EnvironmentStateMap;
-
-        public Environment(Rigidbody2D rigidbody)
+        private readonly IEnumerable<EntityEnvironmentState>     m_EnvironmentStates;
+        private readonly Dictionary<int, EntityEnvironmentState> m_IdentifierMap;
+        private readonly Dictionary<EntityEnvironmentState, int> m_EnvironmentMap;
+        private          EntityEnvironmentValue                  m_EntityEnvironmentValue;
+        
+        public Environment()
         {
-            m_Rigidbody      = rigidbody;
-            m_PlatformStates = (EntityPlatformState[])Enum.GetValues(typeof(EntityPlatformState));
+            m_EnvironmentStates      = (EntityEnvironmentState[])Enum.GetValues(typeof(EntityEnvironmentState));
+            m_EnvironmentMap         = new Dictionary<EntityEnvironmentState, int>();
+            m_EntityEnvironmentValue = new EntityEnvironmentValue(EntityEnvironmentState.Neutral);
 
-            m_PlatformMap         = new Dictionary<EntityPlatformState, int>();
-            m_IdentifierMap       = new Dictionary<int, EntityPlatformState>();
-            m_EnvironmentStateMap = new Dictionary<EntityPlatformState, EntityEnvironmentState>();
-
-            foreach (var platformState in m_PlatformStates)
-                m_PlatformMap[platformState] = 0;
-
-            InitialiseEnvironmentStateMap();
+            foreach (var environmentState in m_EnvironmentStates)
+                m_EnvironmentMap[environmentState] = 0;
         }
 
-        private void InitialiseEnvironmentStateMap()
+        private Environment Add(int id, EntityEnvironmentState entityEnvironmentState)
         {
-            m_EnvironmentStateMap.Add(EntityPlatformState.OnGround,  EntityEnvironmentState.OnGround);
-            m_EnvironmentStateMap.Add(EntityPlatformState.OnCeiling, EntityEnvironmentState.OnCeiling);
-            m_EnvironmentStateMap.Add(EntityPlatformState.OnWallLeft,    EntityEnvironmentState.OnWallLeft);
-            m_EnvironmentStateMap.Add(EntityPlatformState.OnWallRight,    EntityEnvironmentState.OnWallRight);
-        }
+            m_EnvironmentMap[entityEnvironmentState] += 1;
 
-        private Environment Add(int id, EntityPlatformState entityPlatformState)
-        {
-            //Debug.Log("Add: " + entityPlatformState);
-            m_PlatformMap[entityPlatformState] += 1;
-
-            m_IdentifierMap.Add(id, entityPlatformState);
+            m_IdentifierMap.Add(id, entityEnvironmentState);
 
             return this;
         }
 
         private Environment Remove(int id)
         {
-            var entityPlatformState = m_IdentifierMap[id];
-            //Debug.Log("Remove: " + entityPlatformState);
+            var entityEnvironmentState = m_IdentifierMap[id];
+            
             m_IdentifierMap.Remove(id);
 
-            if (m_PlatformMap[entityPlatformState] == 0)
+            if (m_EnvironmentMap[entityEnvironmentState] == 0)
                 throw new Exception("Platform environment map cannot have values below zero.");
 
-            m_PlatformMap[entityPlatformState] -= 1;
+            m_EnvironmentMap[entityEnvironmentState] -= 1;
 
             return this;
         }
 
-        public EntityEnvironmentState Get()
+        public EntityEnvironmentValue Get()
         {
-            foreach (var platformState in m_PlatformStates)
-                if (m_PlatformMap[platformState] > 0)
-                    return m_EnvironmentStateMap[platformState];
-
-            return m_Rigidbody.velocity.y switch
-                   {
-                       > 0 => EntityEnvironmentState.Rising,
-                       < 0 => EntityEnvironmentState.Falling,
-                       0   => EntityEnvironmentState.Constant,
-                       NaN => throw new Exception("Entity's velocity is NaN.")
-                   };
+            m_EntityEnvironmentValue.Reset();
+            
+            foreach (var environmentState in m_EnvironmentStates)
+                if (m_EnvironmentMap[environmentState] > 0)
+                    m_EntityEnvironmentValue += environmentState;
+            
+            return m_EntityEnvironmentValue;
         }
 
-        public static Environment operator+(Environment environment, (int id, EntityPlatformState platformState) item)
+        public static Environment operator+(Environment environment, (int id, EntityEnvironmentState environmentState) item)
         {
-            return environment.Add(item.id, item.platformState);
+            return environment.Add(item.id, item.environmentState);
         }
 
         public static Environment operator-(Environment environment, int id)

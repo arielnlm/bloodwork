@@ -4,7 +4,6 @@ using BloodWork.Assets.Scripts.Commons;
 using BloodWork.Commons;
 using BloodWork.Commons.Types;
 using BloodWork.Entity.EventParams;
-using BloodWork.Manager.GameManager;
 using BloodWork.Utils;
 using UnityEngine;
 
@@ -28,11 +27,11 @@ namespace BloodWork.Entity
 
         protected EntityEnvironmentStateParams EntityEnvironmentStateParams;
 
-        protected EntityEnvironmentState EntityEnvironmentState;
-        protected EntityWallState EntityWallState;
-        protected int             EntityWallInstanceID;
+        protected EntityEnvironmentValue EntityEnvironmentValue;
+        protected EntityWallState        EntityWallState;
+        protected int                    EntityWallInstanceID;
 
-        private float m_Tolerance = 0.01f;
+        private float   m_Tolerance = 0.01f;
         private float   m_VerticalCheckDistance;
         private float   m_HorizontalCheckDistance;
         private Vector2 m_BoxColliderLocalSize;
@@ -49,13 +48,13 @@ namespace BloodWork.Entity
             GroundLayer = LayerMask.GetMask("Ground");
 
             Gravity     = new Gravity(Rigidbody);
-            Environment = new Environment(Rigidbody);
+            Environment = new Environment();
 
             m_BoxColliderLocalSize    = BoxCollider.size * transform.localScale;
             m_VerticalCheckDistance   = m_BoxColliderLocalSize.y / 2 + m_LayerGapTolerance;
             m_HorizontalCheckDistance = m_BoxColliderLocalSize.x / 2 + m_LayerGapTolerance;
 
-            EntityEnvironmentStateParams = new EntityEnvironmentStateParams(EntityEnvironmentState.Initial);
+            EntityEnvironmentStateParams = new EntityEnvironmentStateParams();
 
             Events.OnEntityEnvironmentStateChange?.Invoke(EntityEnvironmentStateParams);
         }
@@ -76,12 +75,15 @@ namespace BloodWork.Entity
 
         private void UpdateFallDownGravity(EntityEnvironmentStateParams entityEnvironmentStateParams)
         {   
-            var changeReference = ChangeReference.Of(ref EntityEnvironmentState, entityEnvironmentStateParams.EntityEnvironmentState);
+            var changeReference = ChangeReference.Of(ref EntityEnvironmentValue, entityEnvironmentStateParams.EntityEnvironmentValue);
 
-            if (changeReference.IsChangedTo(EntityEnvironmentState.Falling))
+            if (!changeReference.IsChanged)
+                return;
+            
+            if (changeReference.NewValue == EntityEnvironmentFlag.Falling)
                 Gravity += (Priority.Medium, m_FallDownGravity, GetInstanceID());
-                    
-            if (changeReference.IsChangedFrom(EntityEnvironmentState.Falling))
+            
+            if (changeReference.OldValue == EntityEnvironmentFlag.Falling)
                 Gravity -= GetInstanceID();
         }
 
@@ -104,15 +106,13 @@ namespace BloodWork.Entity
             //Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
             if (EntityWallState is EntityWallState.OnWallLeft && m_Direction is MoveDirection.Left)
             {
-                //Debug.Log("Left");
                 m_IsWallInEnvironment = true;
-                Environment += (EntityWallInstanceID, EntityPlatformState.OnWallLeft);
+                Environment += (EntityWallInstanceID, EntityEnvironmentState.OnLeftWall);
             }
             else if (EntityWallState is EntityWallState.OnWallRight && m_Direction is MoveDirection.Right)
             {
-                //Debug.Log("Right");
                 m_IsWallInEnvironment = true;
-                Environment += (EntityWallInstanceID, EntityPlatformState.OnWallRight);
+                Environment += (EntityWallInstanceID, EntityEnvironmentState.OnRightWall);
             }
             else if (m_IsWallInEnvironment)
             {
@@ -162,8 +162,8 @@ namespace BloodWork.Entity
                 Environment += (collision.gameObject.GetInstanceID(),
                                 (contactPoints[0].point.y - transform.position.y) switch
                                 { 
-                                    > 0 => EntityPlatformState.OnCeiling, 
-                                    < 0 => EntityPlatformState.OnGround,
+                                    > 0 => EntityEnvironmentState.OnCeiling, 
+                                    < 0 => EntityEnvironmentState.OnGround,
                                     _   => throw new ArgumentOutOfRangeException()
                                 });
             else throw new Exception($"All contact point coordinates are different. Point 1: {contactPoints[0].point}, Point 2: {contactPoints[1].point}");

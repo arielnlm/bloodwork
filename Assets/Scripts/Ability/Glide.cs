@@ -1,4 +1,5 @@
 ﻿using BloodWork.Commons;
+using BloodWork.Commons.Types;
 using BloodWork.Entity.EventParams;
 using BloodWork.Entity.EventParams.Ability;
 using BloodWork.Utils;
@@ -12,7 +13,7 @@ namespace BloodWork.Ability
         [SerializeField] private float m_StartVelocity = -1f;
 
         private TriggerState           m_TriggerState;
-        private EntityEnvironmentState m_EnvironmentState;
+        private EntityEnvironmentValue m_EnvironmentState;
         private bool                   m_ApplyGravity;
 
         private void OnEnable()
@@ -29,7 +30,7 @@ namespace BloodWork.Ability
 
         private void SetMovementState(EntityEnvironmentStateParams entityEnvironmentStateParams)
         {
-            m_EnvironmentState = entityEnvironmentStateParams.EntityEnvironmentState;
+            m_EnvironmentState = entityEnvironmentStateParams.EntityEnvironmentValue;
             
             UpdateGravity();
         }
@@ -58,7 +59,7 @@ namespace BloodWork.Ability
 
         private bool ShouldApplyGravity()
         {
-            return m_TriggerState is TriggerState.Start or TriggerState.Continue && m_EnvironmentState is EntityEnvironmentState.Falling;
+            return m_TriggerState is TriggerState.Start or TriggerState.Continue && m_EnvironmentState == EntityEnvironmentFlag.Falling;
         }
     }
 }
