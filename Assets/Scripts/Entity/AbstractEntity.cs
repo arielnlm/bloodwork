@@ -104,13 +104,11 @@ namespace BloodWork.Entity
             //Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
             if (EntityWallState is EntityWallState.OnWallLeft && m_Direction is MoveDirection.Left)
             {
-                //Debug.Log("Left");
                 m_IsWallInEnvironment = true;
                 Environment += (EntityWallInstanceID, EntityPlatformState.OnWallLeft);
             }
             else if (EntityWallState is EntityWallState.OnWallRight && m_Direction is MoveDirection.Right)
             {
-                //Debug.Log("Right");
                 m_IsWallInEnvironment = true;
                 Environment += (EntityWallInstanceID, EntityPlatformState.OnWallRight);
             }

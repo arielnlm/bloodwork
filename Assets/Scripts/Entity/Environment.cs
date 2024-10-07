@@ -39,7 +39,6 @@ namespace BloodWork.Entity
 
         private Environment Add(int id, EntityPlatformState entityPlatformState)
         {
-            //Debug.Log("Add: " + entityPlatformState);
             m_PlatformMap[entityPlatformState] += 1;
 
             m_IdentifierMap.Add(id, entityPlatformState);
@@ -50,7 +49,6 @@ namespace BloodWork.Entity
         private Environment Remove(int id)
         {
             var entityPlatformState = m_IdentifierMap[id];
-            //Debug.Log("Remove: " + entityPlatformState);
             m_IdentifierMap.Remove(id);
 
             if (m_PlatformMap[entityPlatformState] == 0)
