@@ -65,6 +65,8 @@ namespace BloodWork.Entity
 
         #endregion
 
+        public Action<EntityKnockBackParams> OnKnockBack;
+
         #endregion
     }
 }
