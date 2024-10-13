@@ -740,6 +740,7 @@ GameObject:
   - component: {fileID: 943575328}
   - component: {fileID: 943575329}
   - component: {fileID: 943575330}
+  - component: {fileID: 943575331}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1005,12 +1006,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6c5c2e5c8f9c84c954245c6cf661e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpForce: 10
+  JumpForce: 16
   ExtendJumpTimeLimit: 0.2
   m_WallSlideSpeed: 40
   m_HorizontalSpeedAfterJumping: 400
-  m_WallJumpTimeLimit: 0.06
+  m_WallJumpTimeLimit: 0.1
   m_DisableMovementTimeLimit: 0.15
+--- !u!114 &943575331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943575314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2f9724ab4503184fb7f60ba17e49a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1129885208
 GameObject:
   m_ObjectHideFlags: 0

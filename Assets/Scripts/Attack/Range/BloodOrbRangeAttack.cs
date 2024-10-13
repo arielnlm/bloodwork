@@ -1,8 +1,12 @@
 ﻿using System.Collections;
+using System.Numerics;
 using BloodWork.Attack.Range.Bullets;
 using BloodWork.Commons;
 using BloodWork.Entity.EventParams.Attack;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 namespace BloodWork.Attack.Range
 {
@@ -11,6 +15,11 @@ namespace BloodWork.Attack.Range
         [SerializeField] private Transform m_PositionOffset;
         [SerializeField] private Transform m_AimPosition;
         [SerializeField] private float m_CoolDownTimeLimit;
+
+        [Header("KnockBack")] 
+        [SerializeField] private readonly float m_TimeToPauseMovement = 0.2f;
+        [SerializeField] private readonly float m_XKnockBack = 5f;
+        [SerializeField] private readonly float m_YKnockBack = 5f;
 
         private TriggerState m_TriggerState;
         private bool m_IsOnCooldown;
@@ -52,8 +61,19 @@ namespace BloodWork.Attack.Range
             ammo.transform.position = m_PositionOffset.position;
             ammo.transform.rotation = CalculateRotation();
             ammo.gameObject.SetActive(true);
-
             StartCoroutine(Cooldown());
+
+            if (Entity.Environment.Get() is EntityEnvironmentState.Falling or EntityEnvironmentState.Rising)
+                ApplyKnockBack();
+        }
+
+        private void ApplyKnockBack()
+        {
+            Vector3 mousePosition = m_Camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 direction = ((Vector2)mousePosition - (Vector2)m_AimPosition.position).normalized;
+            float xVelocity = -Vector2.Dot(Vector2.right, direction) * m_XKnockBack;
+            float yVelocity = -Vector2.Dot(Vector2.up, direction)    * m_YKnockBack;
+            Entity.Events.OnKnockBack(new EntityKnockBackParams(m_TimeToPauseMovement, new Vector2(xVelocity, yVelocity)));
         }
 
         private void Update()
