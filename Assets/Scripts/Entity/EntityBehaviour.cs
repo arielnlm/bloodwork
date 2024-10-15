@@ -12,7 +12,10 @@ namespace BloodWork.Entity
         protected virtual void Awake()
         {
             Entity = GetComponent<AbstractEntity>();
-
+        }
+        
+        protected virtual void Start()
+        {
             GameManager = GameManager.Instantiate();
         }
     }

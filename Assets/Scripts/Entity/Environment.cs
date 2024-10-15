@@ -10,12 +10,15 @@ namespace BloodWork.Entity
         private readonly Dictionary<int, EntityEnvironmentState> m_IdentifierMap;
         private readonly Dictionary<EntityEnvironmentState, int> m_EnvironmentMap;
         private          EntityEnvironmentValue                  m_EntityEnvironmentValue;
+        private          bool                                    m_IsChanged;
         
         public Environment()
         {
             m_EnvironmentStates      = (EntityEnvironmentState[])Enum.GetValues(typeof(EntityEnvironmentState));
+            m_IdentifierMap          = new Dictionary<int, EntityEnvironmentState>();
             m_EnvironmentMap         = new Dictionary<EntityEnvironmentState, int>();
             m_EntityEnvironmentValue = new EntityEnvironmentValue(EntityEnvironmentState.Neutral);
+            m_IsChanged              = true;
 
             foreach (var environmentState in m_EnvironmentStates)
                 m_EnvironmentMap[environmentState] = 0;
@@ -24,8 +27,8 @@ namespace BloodWork.Entity
         private Environment Add(int id, EntityEnvironmentState entityEnvironmentState)
         {
             m_EnvironmentMap[entityEnvironmentState] += 1;
-
             m_IdentifierMap.Add(id, entityEnvironmentState);
+            m_IsChanged = true;
 
             return this;
         }
@@ -40,13 +43,18 @@ namespace BloodWork.Entity
                 throw new Exception("Platform environment map cannot have values below zero.");
 
             m_EnvironmentMap[entityEnvironmentState] -= 1;
+            m_IsChanged = true;
 
             return this;
         }
 
         public EntityEnvironmentValue Get()
         {
+            if (!m_IsChanged)
+                return m_EntityEnvironmentValue;
+            
             m_EntityEnvironmentValue.Reset();
+            m_IsChanged = false;
             
             foreach (var environmentState in m_EnvironmentStates)
                 if (m_EnvironmentMap[environmentState] > 0)
