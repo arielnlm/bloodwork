@@ -103,7 +103,6 @@ namespace BloodWork.Entity
 
         private void UpdateEntityWallState()
         {
-            //Environment += (collision.gameObject.GetInstanceID(), EntityPlatformState.OnWall);
             if (EntityWallState is EntityWallState.OnWallLeft && m_Direction is MoveDirection.Left)
             {
                 m_IsWallInEnvironment = true;
@@ -171,14 +170,10 @@ namespace BloodWork.Entity
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (1 << collision.gameObject.layer != GroundLayer)
+            if (1 << collision.gameObject.layer != GroundLayer.value)
                 return;
-
-
-            if (EntityWallInstanceID == collision.gameObject.GetInstanceID())
-                Events.OnWallState?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(), EntityWallState.None));
-            else
-                Environment -= collision.gameObject.GetInstanceID();
+            
+            Environment -= collision.gameObject.GetInstanceID();
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BloodWork.Commons.Types;
+using UnityEngine;
 
 namespace BloodWork.Entity
 {
@@ -47,11 +48,25 @@ namespace BloodWork.Entity
 
             return this;
         }
-
+        
         public EntityEnvironmentValue Get()
         {
+            CalculateValue();
+            
+            return m_EntityEnvironmentValue;
+        }
+
+        public bool Is(EntityEnvironmentFlag entityEnvironmentFlag)
+        {
+            CalculateValue();
+            
+            return m_EntityEnvironmentValue == entityEnvironmentFlag;
+        }
+
+        private void CalculateValue()
+        {
             if (!m_IsChanged)
-                return m_EntityEnvironmentValue;
+                return;
             
             m_EntityEnvironmentValue.Reset();
             m_IsChanged = false;
@@ -59,8 +74,8 @@ namespace BloodWork.Entity
             foreach (var environmentState in m_EnvironmentStates)
                 if (m_EnvironmentMap[environmentState] > 0)
                     m_EntityEnvironmentValue += environmentState;
-            
-            return m_EntityEnvironmentValue;
+
+            Debug.Log($"Calculate | value: {Convert.ToString(m_EntityEnvironmentValue.Value, 2).PadLeft(32, '0')}");
         }
 
         public static Environment operator+(Environment environment, (int id, EntityEnvironmentState environmentState) item)

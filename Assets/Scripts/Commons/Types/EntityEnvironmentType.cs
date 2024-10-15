@@ -32,41 +32,52 @@ namespace BloodWork.Commons.Types
         InWater     = EntityEnvironmentState.AboveWater | EntityEnvironmentState.UnderWater,
     }
 
-    public struct EntityEnvironmentValue
+    public struct EntityEnvironmentValue : IEquatable<EntityEnvironmentValue>
     {
-        private int m_Value;
+        public int Value { get; private set; }
 
         public EntityEnvironmentValue(EntityEnvironmentState environmentState = EntityEnvironmentState.Neutral)
         {
-            m_Value = (int)environmentState;
+            Value = (int)environmentState;
         }
 
         public EntityEnvironmentValue Apply(EntityEnvironmentState environmentState)
         {
-            m_Value |= (int)environmentState;
+            Value |= (int)environmentState;
             return this;
         }
         
         public EntityEnvironmentValue Discard(EntityEnvironmentState environmentState)
         {
-            m_Value &= ~(int)environmentState;
+            Value &= ~(int)environmentState;
             return this;
         }
         
         public EntityEnvironmentValue Reset()
         {
-            m_Value = (int)EntityEnvironmentState.Neutral;
+            Value = (int)EntityEnvironmentState.Neutral;
             return this;
         }
         
         public bool Contains(EntityEnvironmentFlag flag)
         {
-            return (m_Value & (int)flag) > 0;
+            return (Value & (int)flag) > 0;
         }
 
-        public override int  GetHashCode() => m_Value;
+        public override int  GetHashCode()
+        {
+            return Value;
+        }
+
+        public override bool Equals(object @object)
+        {
+            return @object is EntityEnvironmentValue other && Equals(other);
+        }
         
-        public override bool Equals(object @object) => @object is EntityEnvironmentValue other && m_Value == other.m_Value;
+        public bool Equals(EntityEnvironmentValue other)
+        {
+            return Value == other.Value;
+        }
 
         public static EntityEnvironmentValue operator+(EntityEnvironmentValue environmentValue, EntityEnvironmentState environmentState) => environmentValue.Apply(environmentState);
 
@@ -77,5 +88,6 @@ namespace BloodWork.Commons.Types
         public static bool operator==(EntityEnvironmentValue environmentValue, EntityEnvironmentFlag flag) => environmentValue.Contains(flag);
 
         public static bool operator!=(EntityEnvironmentValue environmentValue, EntityEnvironmentFlag flag) => !environmentValue.Contains(flag);
+        
     }
 }
