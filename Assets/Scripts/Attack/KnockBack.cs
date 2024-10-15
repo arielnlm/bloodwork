@@ -9,7 +9,6 @@ namespace BloodWork.Attack
 {
     public class KnockBack : EntityBehaviour
     {
-
         private float m_TimeToPauseMovement;
 
         private void OnEnable()
@@ -25,7 +24,12 @@ namespace BloodWork.Attack
         {
             m_TimeToPauseMovement = entityKnockBackParams.TimeToPauseMovement;
             StartCoroutine(EnableDisableMovement());
-            Entity.Rigidbody.AddForce(entityKnockBackParams.PowerOfKnockBack, ForceMode2D.Impulse);
+            Entity.Rigidbody.velocity = entityKnockBackParams.PowerOfKnockBack;
+        }
+
+        private void Update()
+        {
+            Debug.Log(Entity.Rigidbody.velocity);
         }
 
         private IEnumerator EnableDisableMovement()
