@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BloodWork.Entity
 {
-    public class Environment
+    public class EntityEnvironment
     {
         private readonly IEnumerable<EntityEnvironmentState>     m_EnvironmentStates;
         private readonly Dictionary<int, EntityEnvironmentState> m_IdentifierMap;
@@ -13,7 +13,7 @@ namespace BloodWork.Entity
         private          EntityEnvironmentValue                  m_EntityEnvironmentValue;
         private          bool                                    m_IsChanged;
         
-        public Environment()
+        public EntityEnvironment()
         {
             m_EnvironmentStates      = (EntityEnvironmentState[])Enum.GetValues(typeof(EntityEnvironmentState));
             m_IdentifierMap          = new Dictionary<int, EntityEnvironmentState>();
@@ -25,7 +25,7 @@ namespace BloodWork.Entity
                 m_EnvironmentMap[environmentState] = 0;
         }
 
-        private Environment Add(int id, EntityEnvironmentState entityEnvironmentState)
+        private EntityEnvironment Add(int id, EntityEnvironmentState entityEnvironmentState)
         {
             m_EnvironmentMap[entityEnvironmentState] += 1;
             m_IdentifierMap.Add(id, entityEnvironmentState);
@@ -34,7 +34,7 @@ namespace BloodWork.Entity
             return this;
         }
 
-        private Environment Remove(int id)
+        private EntityEnvironment Remove(int id)
         {
             var entityEnvironmentState = m_IdentifierMap[id];
             
@@ -74,18 +74,16 @@ namespace BloodWork.Entity
             foreach (var environmentState in m_EnvironmentStates)
                 if (m_EnvironmentMap[environmentState] > 0)
                     m_EntityEnvironmentValue += environmentState;
-
-            Debug.Log($"Calculate | value: {Convert.ToString(m_EntityEnvironmentValue.Value, 2).PadLeft(32, '0')}");
         }
 
-        public static Environment operator+(Environment environment, (int id, EntityEnvironmentState environmentState) item)
+        public static EntityEnvironment operator+(EntityEnvironment entityEnvironment, (int id, EntityEnvironmentState environmentState) item)
         {
-            return environment.Add(item.id, item.environmentState);
+            return entityEnvironment.Add(item.id, item.environmentState);
         }
 
-        public static Environment operator-(Environment environment, int id)
+        public static EntityEnvironment operator-(EntityEnvironment entityEnvironment, int id)
         {
-            return environment.Remove(id);
+            return entityEnvironment.Remove(id);
         }
     }
 }

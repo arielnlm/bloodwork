@@ -22,7 +22,7 @@ namespace BloodWork.Entity
         public LayerMask     GroundLayer { get; private set; }
 
         public Gravity     Gravity;
-        public Environment Environment;
+        public EntityEnvironment Environment;
 
 
         protected EntityEnvironmentStateParams EntityEnvironmentStateParams;
@@ -48,7 +48,7 @@ namespace BloodWork.Entity
             GroundLayer = LayerMask.GetMask("Ground");
 
             Gravity     = new Gravity(Rigidbody);
-            Environment = new Environment();
+            Environment = new EntityEnvironment();
 
             m_BoxColliderLocalSize    = BoxCollider.size * transform.localScale;
             m_VerticalCheckDistance   = m_BoxColliderLocalSize.y / 2 + m_LayerGapTolerance;
