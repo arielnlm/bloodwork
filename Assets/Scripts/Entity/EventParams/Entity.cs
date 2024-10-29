@@ -17,8 +17,8 @@ namespace BloodWork.Entity.EventParams
 
     public struct EntityWallStateParams
     {
-        public EntityWallState EntityWallState;
-        public int             InstanceID;
+        public readonly int             InstanceID;
+        public readonly EntityWallState EntityWallState;
 
         public EntityWallStateParams(int instanceID, EntityWallState entityWallState)
         {

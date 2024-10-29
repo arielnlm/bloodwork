@@ -21,13 +21,14 @@ namespace BloodWork.Entity
         public BoxCollider2D BoxCollider { get; private set; }
         public LayerMask     GroundLayer { get; private set; }
 
-        public Gravity     Gravity;
+        public Gravity           Gravity;
         public EntityEnvironment Environment;
 
 
         protected EntityEnvironmentStateParams EntityEnvironmentStateParams;
 
         protected EntityEnvironmentValue EntityEnvironmentValue;
+        protected MoveDirection          MoveDirection;
         protected EntityWallState        EntityWallState;
         protected int                    EntityWallInstanceID;
 
@@ -61,25 +62,31 @@ namespace BloodWork.Entity
 
         protected void OnEnable()
         {
-            Events.OnEntityEnvironmentStateChange += UpdateFallDownGravity;
+            Events.OnEntityEnvironmentStateChange += UpdateEnvironmentState;
             Events.OnPerformMove += SetDirection;
-            Events.OnWallState += SetWallState;
+            Events.OnWallStateChange += SetWallState;
         }
 
         protected void OnDisable()
         {
-            Events.OnEntityEnvironmentStateChange -= UpdateFallDownGravity;
+            Events.OnEntityEnvironmentStateChange -= UpdateEnvironmentState;
             Events.OnPerformMove -= SetDirection;
-            Events.OnWallState -= SetWallState;
+            Events.OnWallStateChange -= SetWallState;
         }
 
-        private void UpdateFallDownGravity(EntityEnvironmentStateParams entityEnvironmentStateParams)
+        private void UpdateEnvironmentState(EntityEnvironmentStateParams entityEnvironmentStateParams)
         {   
             var changeReference = ChangeReference.Of(ref EntityEnvironmentValue, entityEnvironmentStateParams.EntityEnvironmentValue);
 
             if (!changeReference.IsChanged)
                 return;
             
+            UpdateFallDownGravity(ref changeReference);
+            UpdateWallStateFromEnvironment(ref changeReference);
+        }
+
+        private void UpdateFallDownGravity(ref ChangeReference<EntityEnvironmentValue> changeReference)
+        {
             if (changeReference.NewValue == EntityEnvironmentFlag.Falling)
                 Gravity += (Priority.Medium, m_FallDownGravity, GetInstanceID());
             
@@ -87,6 +94,20 @@ namespace BloodWork.Entity
                 Gravity -= GetInstanceID();
         }
 
+        private void UpdateWallStateFromEnvironment(ref ChangeReference<EntityEnvironmentValue> changeReference)
+        {
+            if ((changeReference.OldValue == EntityEnvironmentFlag.OnLeftWall   ||
+                 changeReference.OldValue == EntityEnvironmentFlag.OnRightWall) &&
+                MoveDirection != MoveDirection.Idle)
+                Events.OnWallStateChange?.Invoke(new EntityWallStateParams(GetInstanceID(), EntityWallState.None));
+                
+            if (changeReference.NewValue == EntityEnvironmentFlag.OnLeftWall && MoveDirection == MoveDirection.Left)
+                Events.OnWallStateChange?.Invoke(new EntityWallStateParams(GetInstanceID(), EntityWallState.OnWallLeft));
+            
+            if (changeReference.NewValue == EntityEnvironmentFlag.OnRightWall && MoveDirection == MoveDirection.Right)
+                Events.OnWallStateChange?.Invoke(new EntityWallStateParams(GetInstanceID(), EntityWallState.OnWallRight));
+        }
+        
         private void SetDirection(PerformMoveParams performMoveParams)
         {
             m_Direction = performMoveParams.Direction;
@@ -154,7 +175,7 @@ namespace BloodWork.Entity
             float yDifference = Math.Abs(contactPoints[0].point.y - contactPoints[1].point.y);
             if (xDifference < m_Tolerance)
             {
-                Events.OnWallState?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(),
+                Events.OnWallStateChange?.Invoke(new EntityWallStateParams(collision.gameObject.GetInstanceID(),
                     contactPoints[0].point.x < transform.position.x ? EntityWallState.OnWallLeft : EntityWallState.OnWallRight));
             }
             else if (yDifference < m_Tolerance)
