@@ -11,11 +11,12 @@ namespace BloodWork.Controller
     public abstract class AbstractController : EntityBehaviour
     {
         protected GamePauseParams             GamePause;
-        protected PerformMoveParams           PerformMove;
+        protected ChangeDirectionParams       ChangeDirection;
         protected PerformJumpParams           PerformJump;
         protected PerformDashParams           PerformDash;
         protected PerformGlideParams          PerformGlide;
         protected PerformBloodOrbAttackParams PerformBloodOrbAttack;
+        protected PerformGrapplingHookParams  PerformGrapplingHook;
 
         protected BehaviourState State;
 
@@ -52,8 +53,8 @@ namespace BloodWork.Controller
             if (GameManager.IsGamePaused())
                 return;
 
-            if (ChangeReference.IsChanged(ref PerformMove, UpdateMove()))
-                Entity.Events.OnPerformMove?.Invoke(PerformMove);
+            if (ChangeReference.IsChanged(ref ChangeDirection, UpdateMove()))
+                Entity.Events.OnPerformMove?.Invoke(ChangeDirection);
 
             if (ChangeReference.IsChanged(ref PerformJump, UpdatePerformJump()))
                 Entity.Events.OnPerformJump?.Invoke(PerformJump);
@@ -66,9 +67,14 @@ namespace BloodWork.Controller
 
             if (ChangeReference.IsChanged(ref PerformBloodOrbAttack, UpdateBloodOrbAttack()))
                 Entity.Events.OnPerformBloodOrbAttack?.Invoke(PerformBloodOrbAttack);
+
+            if (ChangeReference.IsChanged(ref PerformGrapplingHook, UpdateGrapplingHookAbility()))
+            {
+                Entity.Events.OnPerformGrapplingHook?.Invoke(PerformGrapplingHook);
+            }
         }
 
-        protected virtual PerformMoveParams UpdateMove() => new();
+        protected virtual ChangeDirectionParams UpdateMove() => new();
 
         protected virtual PerformJumpParams UpdatePerformJump() => new();
 
@@ -79,5 +85,6 @@ namespace BloodWork.Controller
         protected virtual PerformBloodOrbAttackParams UpdateBloodOrbAttack() => new();
 
         protected virtual GamePauseParams UpdatePause() => new();
+        protected virtual PerformGrapplingHookParams UpdateGrapplingHookAbility() => new();
     }
 }

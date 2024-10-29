@@ -27,11 +27,6 @@ namespace BloodWork.Attack
             Entity.Rigidbody.velocity = entityKnockBackParams.PowerOfKnockBack;
         }
 
-        private void Update()
-        {
-            Debug.Log(Entity.Rigidbody.velocity);
-        }
-
         private IEnumerator EnableDisableMovement()
         {
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));

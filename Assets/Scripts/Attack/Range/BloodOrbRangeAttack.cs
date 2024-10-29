@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Numerics;
 using BloodWork.Attack.Range.Bullets;
 using BloodWork.Commons;
@@ -20,10 +21,12 @@ namespace BloodWork.Attack.Range
         [SerializeField] private float m_TimeToPauseMovement = 0.2f;
         [SerializeField] private float m_XKnockBack = 5f;
         [SerializeField] private float m_YKnockBack = 5f;
+        [SerializeField] private float m_YVelocityDivideBy = 2f;
 
         private TriggerState m_TriggerState;
         private bool m_IsOnCooldown;
         private Camera m_Camera;
+        private float m_YKnockBackUsable = 0f;
 
         protected override void Awake()
         {
@@ -64,7 +67,7 @@ namespace BloodWork.Attack.Range
             StartCoroutine(Cooldown());
 
             EntityEnvironmentState entityEnvironmentState = Entity.Environment.Get();
-            if (entityEnvironmentState is EntityEnvironmentState.Falling or EntityEnvironmentState.Rising)
+            if (entityEnvironmentState is EntityEnvironmentState.Rising or EntityEnvironmentState.Falling)
                 ApplyKnockBack(entityEnvironmentState);
         }
 
@@ -73,8 +76,16 @@ namespace BloodWork.Attack.Range
             Vector3 mousePosition = m_Camera.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = ((Vector2)mousePosition - (Vector2)m_AimPosition.position).normalized;
             float xVelocity = Entity.Rigidbody.velocity.x - Vector2.Dot(Vector2.right, direction) * m_XKnockBack;
-            float yVelocity = -Vector2.Dot(Vector2.up, direction)    * m_YKnockBack;
+            float yVelocity = -Vector2.Dot(Vector2.up, direction)    * m_YKnockBackUsable;
+            m_YKnockBackUsable /= 2;
             Entity.Events.OnKnockBack(new EntityKnockBackParams(m_TimeToPauseMovement, new Vector2(xVelocity, yVelocity)));
+        }
+
+        private void FixedUpdate()
+        {
+            if (Entity.Environment.Get() is EntityEnvironmentState.OnGround)
+                m_YKnockBackUsable = m_YKnockBack;
+
         }
 
         private void Update()

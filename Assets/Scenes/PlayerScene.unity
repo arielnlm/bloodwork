@@ -741,6 +741,7 @@ GameObject:
   - component: {fileID: 943575329}
   - component: {fileID: 943575330}
   - component: {fileID: 943575331}
+  - component: {fileID: 943575332}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -994,6 +995,10 @@ MonoBehaviour:
   m_PositionOffset: {fileID: 1129885209}
   m_AimPosition: {fileID: 1364886081}
   m_CoolDownTimeLimit: 0.5
+  m_TimeToPauseMovement: 0.2
+  m_XKnockBack: 5
+  m_YKnockBack: 10
+  m_YVelocityDivideBy: 2
 --- !u!114 &943575330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1006,7 +1011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6c5c2e5c8f9c84c954245c6cf661e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpForce: 16
+  JumpForce: 10
   ExtendJumpTimeLimit: 0.2
   m_WallSlideSpeed: 40
   m_HorizontalSpeedAfterJumping: 400
@@ -1024,6 +1029,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f9724ab4503184fb7f60ba17e49a90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &943575332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943575314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 703852eb4d337714b8bea06b19ac5508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Speed: 2000
+  m_TValueLerp: 0.3
 --- !u!1 &1129885208
 GameObject:
   m_ObjectHideFlags: 0

@@ -85,9 +85,9 @@ namespace BloodWork.Entity
                 Gravity -= GetInstanceID();
         }
 
-        private void SetDirection(PerformMoveParams performMoveParams)
+        private void SetDirection(ChangeDirectionParams changeDirectionParams)
         {
-            m_Direction = performMoveParams.Direction;
+            m_Direction = changeDirectionParams.Direction;
             UpdateEntityWallState();
         }
 

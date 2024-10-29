@@ -1,3 +1,4 @@
+using System;
 using BloodWork.Commons;
 using BloodWork.Entity;
 using BloodWork.Entity.EventParams;
@@ -12,16 +13,39 @@ namespace BloodWork.Movement
         private MoveDirection m_Direction;
         protected BehaviourState State;
 
+        private float m_XSpeed;
+        private float m_YSpeed;
+        private float m_TLerp;
+
         protected override void Awake()
         {
             base.Awake();
             ChangeState(new MoveBehaviourStateParams(BehaviourState.Enable));
         }
 
+        private void Start()
+        {
+            m_XSpeed = m_MaxSpeed;
+        }
+
         private void OnEnable()
         {
             Entity.Events.OnPerformMove         += SetDirection;
             Entity.Events.OnMoveChangeState     += ChangeState;
+            Entity.Events.OnChangeMovementSpeed += ChangeMovementSpeed;
+        }
+        private void OnDisable()
+        {
+            Entity.Events.OnPerformMove         -= SetDirection;
+            Entity.Events.OnMoveChangeState     -= ChangeState;
+            Entity.Events.OnChangeMovementSpeed -= ChangeMovementSpeed;
+        }
+
+        private void ChangeMovementSpeed(ChangeMovementSpeedParams changeMovementSpeedParams)
+        {
+            m_XSpeed = changeMovementSpeedParams.XSpeed;
+            m_YSpeed = changeMovementSpeedParams.YSpeed;
+            m_TLerp  = changeMovementSpeedParams.TValueLerp;
         }
 
         private void ChangeState(MoveBehaviourStateParams moveBehaviourStateParams)
@@ -29,14 +53,10 @@ namespace BloodWork.Movement
             State = moveBehaviourStateParams.State;
         }
 
-        private void OnDisable()
-        {
-            Entity.Events.OnPerformMove -= SetDirection;
-        }
 
-        private void SetDirection(PerformMoveParams performMoveParams)
+        private void SetDirection(ChangeDirectionParams changeDirectionParams)
         {
-            m_Direction = performMoveParams.Direction;
+            m_Direction = changeDirectionParams.Direction;
         }
 
 
@@ -55,7 +75,11 @@ namespace BloodWork.Movement
                 return;
 
             SetLookDirection();
-            Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_MaxSpeed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
+            Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_XSpeed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
+
+            Debug.Log(m_XSpeed);
+            if (Mathf.Abs(m_XSpeed - m_MaxSpeed) > 1)
+                m_XSpeed = Mathf.Lerp(m_XSpeed, m_MaxSpeed, m_TLerp);
         }
     }
 }

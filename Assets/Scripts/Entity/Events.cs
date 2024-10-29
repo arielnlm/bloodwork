@@ -16,8 +16,9 @@ namespace BloodWork.Entity
 
         #region Move
 
-        public Action<PerformMoveParams>         OnPerformMove;
-        public Action<MoveBehaviourStateParams> OnMoveChangeState;
+        public Action<ChangeDirectionParams>     OnPerformMove;
+        public Action<MoveBehaviourStateParams>  OnMoveChangeState;
+        public Action<ChangeMovementSpeedParams> OnChangeMovementSpeed;
 
         #endregion
 
@@ -42,6 +43,8 @@ namespace BloodWork.Entity
         public Action<PerformGlideParams> OnPerformGlide;
 
         #endregion
+
+        public Action <PerformGrapplingHookParams> OnPerformGrapplingHook;
 
         #endregion
 

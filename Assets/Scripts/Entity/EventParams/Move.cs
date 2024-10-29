@@ -2,11 +2,11 @@
 
 namespace BloodWork.Entity.EventParams
 {
-    public struct PerformMoveParams
+    public struct ChangeDirectionParams
     {
         public MoveDirection Direction;
 
-        public PerformMoveParams(MoveDirection direction)
+        public ChangeDirectionParams(MoveDirection direction)
         {
             Direction = direction;
         }
@@ -21,4 +21,19 @@ namespace BloodWork.Entity.EventParams
             State = state;
         }
     }
+
+    public struct ChangeMovementSpeedParams
+    {
+        public float XSpeed;
+        public float YSpeed;
+        public float TValueLerp;
+
+        public ChangeMovementSpeedParams(float xSpeed, float ySpeed, float tValueLerp)
+        {
+            XSpeed = xSpeed;
+            YSpeed = ySpeed;
+            TValueLerp = tValueLerp;
+        }
+    }
+
 }

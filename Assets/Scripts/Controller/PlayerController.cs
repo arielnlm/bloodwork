@@ -8,9 +8,9 @@ namespace BloodWork.Controller
 {
     public class PlayerController : AbstractController
     {
-        protected override PerformMoveParams UpdateMove()
+        protected override ChangeDirectionParams UpdateMove()
         {
-            return new PerformMoveParams(MoveDirections.ValueOf(Input.GetAxisRaw("Horizontal")));
+            return new ChangeDirectionParams(MoveDirections.ValueOf(Input.GetAxisRaw("Horizontal")));
         }
 
         protected override PerformJumpParams UpdatePerformJump()
@@ -40,6 +40,12 @@ namespace BloodWork.Controller
         protected override GamePauseParams UpdatePause()
         {
             return new GamePauseParams(KeyStates.GetState(KeyCode.Escape) == KeyState.Pressed ? !GamePause.Pause : GamePause.Pause);
+        }
+
+        protected override PerformGrapplingHookParams UpdateGrapplingHookAbility()
+        {
+            return new PerformGrapplingHookParams(TriggerStates.ValueOf(KeyStates.GetState(KeyCode.Mouse1)
+                .GetValue()));
         }
     }
 }
