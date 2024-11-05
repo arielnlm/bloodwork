@@ -69,9 +69,7 @@ namespace BloodWork.Controller
                 Entity.Events.OnPerformBloodOrbAttack?.Invoke(PerformBloodOrbAttack);
 
             if (ChangeReference.IsChanged(ref PerformGrapplingHook, UpdateGrapplingHookAbility()))
-            {
                 Entity.Events.OnPerformGrapplingHook?.Invoke(PerformGrapplingHook);
-            }
         }
 
         protected virtual ChangeDirectionParams UpdateMove() => new();

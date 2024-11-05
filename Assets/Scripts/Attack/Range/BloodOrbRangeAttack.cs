@@ -75,8 +75,11 @@ namespace BloodWork.Attack.Range
         {
             Vector3 mousePosition = m_Camera.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = ((Vector2)mousePosition - (Vector2)m_AimPosition.position).normalized;
-            float xVelocity = Entity.Rigidbody.velocity.x - Vector2.Dot(Vector2.right, direction) * m_XKnockBack;
-            float yVelocity = -Vector2.Dot(Vector2.up, direction)    * m_YKnockBackUsable;
+            float xVelocity = -Vector2.Dot(Vector2.right, direction) * m_XKnockBack;
+            float yVelocity = -Vector2.Dot(Vector2.up, direction) * m_YKnockBackUsable;
+
+            if (Entity.Rigidbody.velocity.x < 0 && xVelocity < 0 || Entity.Rigidbody.velocity.x > 0 && xVelocity > 0)
+                xVelocity = Entity.Rigidbody.velocity.x + xVelocity;
             m_YKnockBackUsable /= 2;
             Entity.Events.OnKnockBack(new EntityKnockBackParams(m_TimeToPauseMovement, new Vector2(xVelocity, yVelocity)));
         }
