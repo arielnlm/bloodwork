@@ -9,9 +9,17 @@ namespace BloodWork.Movement
     public class Movement : EntityBehaviour
     {
         [SerializeField] private float m_MaxSpeed = 300f;
+        [SerializeField] private float m_Accelaration = 100f;
+        [SerializeField] private float m_Deceleration = 100f;
 
         private MoveDirection m_Direction;
+        private float m_Speed;
         protected BehaviourState State;
+
+        private void Start()
+        {
+            m_Speed = m_MaxSpeed;
+        }
 
         protected override void Awake()
         {
@@ -56,7 +64,16 @@ namespace BloodWork.Movement
                 return;
 
             SetLookDirection();
-            Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_MaxSpeed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
+            Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_Speed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
+            VelocityAdjustment();
+        }
+
+        private void VelocityAdjustment()
+        {
+            if (m_Speed < m_MaxSpeed)
+                m_Speed = Mathf.Min(m_MaxSpeed, m_Speed + m_Accelaration * Time.fixedDeltaTime);
+            else if (m_Speed > m_MaxSpeed)
+                m_Speed = Mathf.Max(m_MaxSpeed, m_Speed - m_Deceleration * Time.fixedDeltaTime);
         }
     }
 }
