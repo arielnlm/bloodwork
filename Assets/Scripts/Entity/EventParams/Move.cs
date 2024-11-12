@@ -1,4 +1,5 @@
 ﻿using BloodWork.Commons;
+using UnityEngine;
 
 namespace BloodWork.Entity.EventParams
 {
@@ -24,15 +25,19 @@ namespace BloodWork.Entity.EventParams
 
     public struct ChangeMovementSpeedParams
     {
-        public float XSpeed;
-        public float YSpeed;
-        public float TValueLerp;
+        public float StartSpeed;
+        public float EndSpeed;
+        public Vector2 Direction;
+        public float Acceleration;
+        public float Deceleration;
 
-        public ChangeMovementSpeedParams(float xSpeed, float ySpeed, float tValueLerp)
+        public ChangeMovementSpeedParams(float startSpeed, float endSpeed, Vector2 direction,  float acceleration, float deceleration)
         {
-            XSpeed = xSpeed;
-            YSpeed = ySpeed;
-            TValueLerp = tValueLerp;
+            StartSpeed = startSpeed;
+            EndSpeed = endSpeed;
+            Direction = direction;
+            Acceleration = acceleration;
+            Deceleration = deceleration;
         }
     }
 

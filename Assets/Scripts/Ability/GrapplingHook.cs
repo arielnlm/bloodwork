@@ -11,7 +11,8 @@ namespace BloodWork
 {
     public class GrapplingHook : EntityBehaviour
     {
-        [SerializeField] private float m_Speed = 1200;
+        [SerializeField] private float m_MaxSpeed = 1200f;
+        [SerializeField] private float m_MinSpeed = 500f;
         [SerializeField] private float m_Deceleration = 100f;
 
         private Vector2 m_Direction;
@@ -19,7 +20,6 @@ namespace BloodWork
         private bool m_IsActive = false;
         private float m_CurrSpeed = 0f;
 
-        private Vector2 m_OldMovement = Vector2.zero;
         // Start is called before the first frame update
         void Start()
         {
@@ -32,53 +32,52 @@ namespace BloodWork
             Entity.Events.OnPerformMove += OnChangeDirection;
         }
 
-        private void OnChangeDirection(ChangeDirectionParams changeDirectionParams)
-        {
-            if (!m_IsActive)
-                return;
-            Vector3 tRight = Entity.transform.right;
-            Entity.transform.right = new Vector3(MoveDirections.GetValue(changeDirectionParams.Direction), tRight.y, tRight.z);
-        }
 
 
         private void OnDisable()
         {
             Entity.Events.OnPerformGrapplingHook -= OnPerformGrapplingHook;
         }
+        private void OnChangeDirection(ChangeDirectionParams changeDirectionParams)
+        {
+            if (!m_IsActive)
+                return;
+        }
         private void OnPerformGrapplingHook(PerformGrapplingHookParams performGrapplingHookParams)
         {
             if (performGrapplingHookParams.State != TriggerState.Start)
                 return;
-            StartHooking();
+
+            Entity.Events.OnChangeMovementSpeed(new ChangeMovementSpeedParams(m_MaxSpeed, m_MinSpeed, CalculateDirectionNormalized(), 0f, m_Deceleration));
+            //StartHooking();
         }
 
         private void FixedUpdate()
         {
-            if (!m_IsActive)
-                return;
+            //if (!m_IsActive)
+            //    return;
 
-            m_CurrSpeed -= m_Deceleration * Time.fixedDeltaTime;
-            Entity.Rigidbody.velocity = new Vector2(Entity.transform.right.x * m_CurrSpeed * m_Direction.x, m_CurrSpeed * m_Direction.y);
+            //m_CurrSpeed -= m_Deceleration * Time.fixedDeltaTime;
+            //Entity.Rigidbody.velocity = new Vector2(Entity.transform.right.x * m_CurrSpeed * m_Direction.x, m_CurrSpeed * m_Direction.y);
 
-            if ( m_CurrSpeed< Mathf.Abs(m_OldMovement.x))
-                StopHooking();
+            //if ( m_CurrSpeed < m_MinSpeed)
+            //    StopHooking();
         }
 
         private void StartHooking()
         {
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
             m_IsActive = true;
-            m_OldMovement = new Vector2(Entity.Rigidbody.velocity.x, 0);
-            m_CurrSpeed = m_Speed * Time.fixedDeltaTime;
+            //m_CurrSpeed = m_MaxSpeed * Time.fixedDeltaTime;
             m_Direction = CalculateDirectionNormalized();
             Entity.Rigidbody.velocity = m_CurrSpeed * m_Direction;
         }
 
         private void StopHooking()
         {
-            Entity.Rigidbody.velocity = m_OldMovement;
             m_IsActive = false;
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
+           // Entity.Events.OnChangeMovementSpeed?.Invoke(new ChangeMovementSpeedParams(xSpeed: m_MinSpeed, ySpeed: m_MinSpeed, 0.3f));
         }
 
         private Vector2 CalculateDirectionNormalized()
