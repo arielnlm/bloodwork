@@ -97,36 +97,28 @@ namespace BloodWork.Movement
         {
             Entity.Rigidbody.velocity = m_Speed * Time.fixedDeltaTime * m_EventDirection;
             VelocityAdjustmentForEvent();
+
+            if (Mathf.Abs(m_Speed - m_EventEndSpeed) < 0.1)
+            {
+                m_Speed *= Mathf.Abs(m_EventDirection.x);
+                m_IsEventSpeed = false;
+            }
         }
 
         private void VelocityAdjustmentForEvent()
         {
             if (m_IsEventSpeed && m_Speed < m_EventEndSpeed)
-            {
-                m_Speed = Mathf.Min(m_EventEndSpeed, m_Speed + m_EventAcceleration * Time.fixedDeltaTime);
-                if (Mathf.Abs(m_Speed - m_EventEndSpeed) < 0.1)
-                    m_IsEventSpeed = false;
-            }
+                m_Speed = Mathf.Min(m_EventEndSpeed, m_Speed + m_EventAcceleration);
             else if (m_IsEventSpeed && m_Speed > m_EventEndSpeed)
-            {
-                m_Speed = Mathf.Max(m_EventEndSpeed, m_Speed - m_EventDeceleration * Time.fixedDeltaTime);
-                if (Mathf.Abs(m_Speed - m_EventEndSpeed) < 0.1)
-                    m_IsEventSpeed = false;
-            }
+                m_Speed = Mathf.Max(m_EventEndSpeed, m_Speed - m_EventDeceleration);
         }
 
         private void VelocityAdjustment()
         {
             if (m_Speed < m_MaxSpeed)
-                m_Speed = Mathf.Min(m_MaxSpeed, m_Speed + m_Accelaration * Time.fixedDeltaTime);
+                m_Speed = Mathf.Min(m_MaxSpeed, m_Speed + m_Accelaration);
             else if (m_Speed > m_MaxSpeed)
-                m_Speed = Mathf.Max(m_MaxSpeed, m_Speed - m_Deceleration * Time.fixedDeltaTime);
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(Vector2.zero, m_EventDirection);
+                m_Speed = Mathf.Max(m_MaxSpeed, m_Speed - m_Deceleration);
         }
     }
 }

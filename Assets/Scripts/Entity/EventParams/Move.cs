@@ -31,7 +31,7 @@ namespace BloodWork.Entity.EventParams
         public float Acceleration;
         public float Deceleration;
 
-        public ChangeMovementSpeedParams(float startSpeed, float endSpeed, Vector2 direction,  float acceleration, float deceleration)
+        public ChangeMovementSpeedParams(float startSpeed, float endSpeed, Vector2 direction,  float acceleration = 0f, float deceleration = 0f)
         {
             StartSpeed = startSpeed;
             EndSpeed = endSpeed;

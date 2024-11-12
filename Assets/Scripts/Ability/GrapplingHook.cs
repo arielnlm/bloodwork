@@ -48,7 +48,7 @@ namespace BloodWork
             if (performGrapplingHookParams.State != TriggerState.Start)
                 return;
 
-            Entity.Events.OnChangeMovementSpeed(new ChangeMovementSpeedParams(m_MaxSpeed, m_MinSpeed, CalculateDirectionNormalized(), 0f, m_Deceleration));
+            Entity.Events.OnChangeMovementSpeed(new ChangeMovementSpeedParams(m_MaxSpeed, m_MinSpeed, CalculateDirectionNormalized(),  0f, m_Deceleration));
             //StartHooking();
         }
 

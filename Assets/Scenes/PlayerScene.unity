@@ -863,8 +863,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaxSpeed: 300
-  m_Accelaration: 100
-  m_Deceleration: 100
+  m_Accelaration: 50
+  m_Deceleration: 50
 --- !u!114 &943575321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1043,8 +1043,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 703852eb4d337714b8bea06b19ac5508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 2000
-  m_Deceleration: 100
+  m_MaxSpeed: 1000
+  m_MinSpeed: 600
+  m_Deceleration: 30
 --- !u!1 &1129885208
 GameObject:
   m_ObjectHideFlags: 0
