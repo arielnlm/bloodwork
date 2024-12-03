@@ -1044,8 +1044,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaxSpeed: 1000
-  m_MinSpeed: 600
+  m_MinSpeed: 300
   m_Deceleration: 30
+  m_LockMovementTImer: 0.3
 --- !u!1 &1129885208
 GameObject:
   m_ObjectHideFlags: 0

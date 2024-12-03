@@ -81,7 +81,8 @@ namespace BloodWork.Attack.Range
             if (Entity.Rigidbody.velocity.x < 0 && xVelocity < 0 || Entity.Rigidbody.velocity.x > 0 && xVelocity > 0)
                 xVelocity = Entity.Rigidbody.velocity.x + xVelocity;
             m_YKnockBackUsable /= 2;
-            Entity.Events.OnKnockBack(new EntityKnockBackParams(m_TimeToPauseMovement, new Vector2(xVelocity, yVelocity)));
+
+            Entity.Events.OnKnockBack(new EntityKnockBackParams(Mathf.Abs(xVelocity) < 1f ? 0f : m_TimeToPauseMovement, new Vector2(xVelocity, yVelocity)));
         }
 
         private void FixedUpdate()
