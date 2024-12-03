@@ -27,13 +27,15 @@ namespace BloodWork.Entity.EventParams
     {
         public float StartSpeed;
         public float EndSpeed;
+        public float LockControllerTimer;
         public Vector2 Direction;
         public float Acceleration;
         public float Deceleration;
 
-        public ChangeMovementSpeedParams(float startSpeed, float endSpeed, Vector2 direction,  float acceleration = 0f, float deceleration = 0f)
+        public ChangeMovementSpeedParams(float startSpeed, float endSpeed, float lockControllerTimer, Vector2 direction,  float acceleration = 0f, float deceleration = 0f)
         {
             StartSpeed = startSpeed;
+            LockControllerTimer = lockControllerTimer;
             EndSpeed = endSpeed;
             Direction = direction;
             Acceleration = acceleration;

@@ -12,8 +12,9 @@ namespace BloodWork
     public class GrapplingHook : EntityBehaviour
     {
         [SerializeField] private float m_MaxSpeed = 1200f;
-        [SerializeField] private float m_MinSpeed = 500f;
+        [SerializeField] private float m_MinSpeed = 0f;
         [SerializeField] private float m_Deceleration = 100f;
+        [SerializeField] private float m_LockMovementTImer = 0.3f;
 
         private Vector2 m_Direction;
         private Camera m_Camera;
@@ -48,20 +49,8 @@ namespace BloodWork
             if (performGrapplingHookParams.State != TriggerState.Start)
                 return;
 
-            Entity.Events.OnChangeMovementSpeed(new ChangeMovementSpeedParams(m_MaxSpeed, m_MinSpeed, CalculateDirectionNormalized(),  0f, m_Deceleration));
+            Entity.Events.OnChangeMovementSpeed(new ChangeMovementSpeedParams(m_MaxSpeed, m_MinSpeed, m_LockMovementTImer, CalculateDirectionNormalized(),  0f, m_Deceleration));
             //StartHooking();
-        }
-
-        private void FixedUpdate()
-        {
-            //if (!m_IsActive)
-            //    return;
-
-            //m_CurrSpeed -= m_Deceleration * Time.fixedDeltaTime;
-            //Entity.Rigidbody.velocity = new Vector2(Entity.transform.right.x * m_CurrSpeed * m_Direction.x, m_CurrSpeed * m_Direction.y);
-
-            //if ( m_CurrSpeed < m_MinSpeed)
-            //    StopHooking();
         }
 
         private void StartHooking()

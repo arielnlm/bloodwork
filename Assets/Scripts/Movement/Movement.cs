@@ -21,6 +21,8 @@ namespace BloodWork.Movement
         private float m_EventEndSpeed;
         private float m_EventAcceleration;
         private float m_EventDeceleration;
+        private float m_EventLockControllerTimer;
+        private MoveDirection m_EventMoveDirection;
 
         private void Start()
         {
@@ -50,10 +52,12 @@ namespace BloodWork.Movement
         private void ChangeMovementSpeed(ChangeMovementSpeedParams changeMovementSpeed)
         {
             m_Speed = changeMovementSpeed.StartSpeed;
+            m_EventLockControllerTimer = changeMovementSpeed.LockControllerTimer;
             m_EventEndSpeed = changeMovementSpeed.EndSpeed;
             m_EventDirection = changeMovementSpeed.Direction;
             m_EventAcceleration = changeMovementSpeed.Acceleration;
             m_EventDeceleration = changeMovementSpeed.Deceleration;
+            m_EventMoveDirection = MoveDirections.ValueOf(m_EventDirection.x);
             m_IsEventSpeed = true;
         }
 
@@ -95,14 +99,20 @@ namespace BloodWork.Movement
 
         private void PerformEventMovement()
         {
-            Entity.Rigidbody.velocity = m_Speed * Time.fixedDeltaTime * m_EventDirection;
+
+            if (m_EventLockControllerTimer > 0f)
+                Entity.Rigidbody.velocity = m_Speed * Time.fixedDeltaTime * m_EventDirection;
+            else
+            {
+                m_EventDirection.x = m_Direction == MoveDirection.Idle ? m_EventDirection.x : m_Direction.GetValue();
+                Entity.Rigidbody.velocity = new Vector2( m_Speed * Time.fixedDeltaTime * m_EventDirection.x, Entity.Rigidbody.velocity.y);
+            }
+
+            m_EventLockControllerTimer -= Time.fixedDeltaTime;
             VelocityAdjustmentForEvent();
 
             if (Mathf.Abs(m_Speed - m_EventEndSpeed) < 0.1)
-            {
-                m_Speed *= Mathf.Abs(m_EventDirection.x);
                 m_IsEventSpeed = false;
-            }
         }
 
         private void VelocityAdjustmentForEvent()
