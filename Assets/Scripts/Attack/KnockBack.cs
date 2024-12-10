@@ -10,6 +10,7 @@ namespace BloodWork.Attack
     public class KnockBack : EntityBehaviour
     {
         private float m_TimeToPauseMovement;
+        private bool m_IsActive;
 
         private void OnEnable()
         {
@@ -24,15 +25,17 @@ namespace BloodWork.Attack
         {
             m_TimeToPauseMovement = entityKnockBackParams.TimeToPauseMovement;
             StartCoroutine(EnableDisableMovement());
-            Entity.Rigidbody.velocity = entityKnockBackParams.PowerOfKnockBack;
+            Entity.Rigidbody.linearVelocity = entityKnockBackParams.PowerOfKnockBack;
         }
 
         private IEnumerator EnableDisableMovement()
         {
+            m_IsActive = true;
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
 
             yield return new WaitForSeconds(m_TimeToPauseMovement);
 
+            m_IsActive = false;
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Enable));
         }
 

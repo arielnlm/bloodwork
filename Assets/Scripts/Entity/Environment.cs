@@ -65,7 +65,7 @@ namespace BloodWork.Entity
                 if (m_PlatformMap[platformState] > 0)
                     return m_EnvironmentStateMap[platformState];
 
-            return m_Rigidbody.velocity.y switch
+            return m_Rigidbody.linearVelocity.y switch
                    {
                        > 0 => EntityEnvironmentState.Rising,
                        < 0 => EntityEnvironmentState.Falling,

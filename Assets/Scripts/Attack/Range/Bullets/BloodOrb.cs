@@ -17,7 +17,7 @@ namespace BloodWork.Attack.Range.Bullets
 
         private void FixedUpdate()
         {
-            m_rigidbody2D.velocity = m_Speed * Time.fixedDeltaTime * transform.right;
+            m_rigidbody2D.linearVelocity = m_Speed * Time.fixedDeltaTime * transform.right;
         }
 
         private void OnCollisionEnter2D(Collision2D other)

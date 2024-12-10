@@ -92,7 +92,7 @@ namespace BloodWork.Movement
                 PerformEventMovement();
             else
             {
-                Entity.Rigidbody.velocity = new Vector2(m_Direction.GetValue() * m_Speed * Time.fixedDeltaTime, Entity.Rigidbody.velocity.y);
+                Entity.Rigidbody.linearVelocity = new Vector2(m_Direction.GetValue() * m_Speed * Time.fixedDeltaTime, Entity.Rigidbody.linearVelocity.y);
                 VelocityAdjustment();
             }
         }
@@ -101,11 +101,11 @@ namespace BloodWork.Movement
         {
 
             if (m_EventLockControllerTimer > 0f)
-                Entity.Rigidbody.velocity = m_Speed * Time.fixedDeltaTime * m_EventDirection;
+                Entity.Rigidbody.linearVelocity = m_Speed * Time.fixedDeltaTime * m_EventDirection;
             else
             {
                 m_EventDirection.x = m_Direction == MoveDirection.Idle ? m_EventDirection.x : m_Direction.GetValue();
-                Entity.Rigidbody.velocity = new Vector2( m_Speed * Time.fixedDeltaTime * m_EventDirection.x, Entity.Rigidbody.velocity.y);
+                Entity.Rigidbody.linearVelocity = new Vector2( m_Speed * Time.fixedDeltaTime * m_EventDirection.x, Entity.Rigidbody.linearVelocity.y);
             }
 
             m_EventLockControllerTimer -= Time.fixedDeltaTime;

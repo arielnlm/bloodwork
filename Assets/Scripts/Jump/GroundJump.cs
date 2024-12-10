@@ -31,7 +31,7 @@ namespace BloodWork.Jump
                 return;
 
             if (ApplyJumpForce)
-                Entity.Rigidbody.velocity = new Vector2(Entity.Rigidbody.velocity.x, JumpForce);
+                Entity.Rigidbody.linearVelocity = new Vector2(Entity.Rigidbody.linearVelocity.x, JumpForce);
 
             JumpTime += Time.fixedDeltaTime;
         }

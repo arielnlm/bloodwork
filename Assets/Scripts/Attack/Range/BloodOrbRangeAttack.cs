@@ -78,8 +78,8 @@ namespace BloodWork.Attack.Range
             float xVelocity = -Vector2.Dot(Vector2.right, direction) * m_XKnockBack;
             float yVelocity = -Vector2.Dot(Vector2.up, direction) * m_YKnockBackUsable;
 
-            if (Entity.Rigidbody.velocity.x < 0 && xVelocity < 0 || Entity.Rigidbody.velocity.x > 0 && xVelocity > 0)
-                xVelocity = Entity.Rigidbody.velocity.x + xVelocity;
+            if (Entity.Rigidbody.linearVelocity.x < 0 && xVelocity < 0 || Entity.Rigidbody.linearVelocity.x > 0 && xVelocity > 0)
+                xVelocity = Entity.Rigidbody.linearVelocity.x + xVelocity;
             m_YKnockBackUsable /= 2;
 
             Entity.Events.OnKnockBack(new EntityKnockBackParams(Mathf.Abs(xVelocity) < 1f ? 0f : m_TimeToPauseMovement, new Vector2(xVelocity, yVelocity)));

@@ -49,7 +49,7 @@ namespace BloodWork.Ability
 
             if (m_ApplyGravity)
             {
-                Entity.Rigidbody.velocity =  new Vector2(Entity.Rigidbody.velocity.x, m_StartVelocity);
+                Entity.Rigidbody.linearVelocity =  new Vector2(Entity.Rigidbody.linearVelocity.x, m_StartVelocity);
                 Entity.Gravity            += (Priority.High, m_Gravity, GetInstanceID());
             }
             else

@@ -37,9 +37,9 @@ namespace BloodWork.Jump
         {
             if (IsWallSliding())
             {
-                Vector2 oldVelocity = Entity.Rigidbody.velocity;
+                Vector2 oldVelocity = Entity.Rigidbody.linearVelocity;
                 float yVelocity = Mathf.Clamp(oldVelocity.y, m_MinRange, m_MaxRange) * m_WallSlideSpeed * Time.fixedDeltaTime;
-                Entity.Rigidbody.velocity = new Vector2(oldVelocity.x, yVelocity);
+                Entity.Rigidbody.linearVelocity = new Vector2(oldVelocity.x, yVelocity);
             }
 
             if (JumpState == JumpState.Default && !ApplyJumpForce)
@@ -55,14 +55,14 @@ namespace BloodWork.Jump
 
         private void Jump()
         {
-            float xVelocity = Entity.Rigidbody.velocity.x;
+            float xVelocity = Entity.Rigidbody.linearVelocity.x;
 
             if (m_EntityEnviromentOnJump is EntityEnvironmentState.OnWallLeft)
                 xVelocity = m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
             if (m_EntityEnviromentOnJump is EntityEnvironmentState.OnWallRight)
                 xVelocity = -m_HorizontalSpeedAfterJumping * Time.fixedDeltaTime;
 
-            Entity.Rigidbody.velocity = new Vector2(xVelocity, JumpForce);
+            Entity.Rigidbody.linearVelocity = new Vector2(xVelocity, JumpForce);
         }
 
         private void CheckWallJump()

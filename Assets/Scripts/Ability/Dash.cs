@@ -50,7 +50,7 @@ namespace BloodWork.Ability
             if (!m_IsActive)
                 return;
 
-            Entity.Rigidbody.velocity = new Vector2(Entity.transform.right.x * m_Speed * Time.fixedDeltaTime, 0f);
+            Entity.Rigidbody.linearVelocity = new Vector2(Entity.transform.right.x * m_Speed * Time.fixedDeltaTime, 0f);
 
             m_IsActive = m_ActiveTimeCounter <= m_ActiveTime;
             if (!m_IsActive)

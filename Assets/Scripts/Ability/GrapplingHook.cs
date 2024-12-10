@@ -59,7 +59,7 @@ namespace BloodWork
             m_IsActive = true;
             //m_CurrSpeed = m_MaxSpeed * Time.fixedDeltaTime;
             m_Direction = CalculateDirectionNormalized();
-            Entity.Rigidbody.velocity = m_CurrSpeed * m_Direction;
+            Entity.Rigidbody.linearVelocity = m_CurrSpeed * m_Direction;
         }
 
         private void StopHooking()
