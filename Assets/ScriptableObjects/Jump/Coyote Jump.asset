@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae060601fc3e6a45ba063133051534d, type: 3}
   m_Name: Coyote Jump
   m_EditorClassIdentifier: 
-  <JumpForce>k__BackingField: 5
+  <JumpForce>k__BackingField: 10
   <ExtendJumpTimeLimit>k__BackingField: 0.1
   <CoyoteTimeLimit>k__BackingField: 0.06

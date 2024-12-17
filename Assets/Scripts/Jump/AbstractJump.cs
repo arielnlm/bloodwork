@@ -7,6 +7,7 @@ namespace BloodWork.Jump
 {
     public abstract class AbstractJump : EntityBehaviour
     {
+        //TODO budi ljut na nemanju
         [Header("Shared Properties")]
         [SerializeField] protected float JumpForce           = 10f;
         [SerializeField] protected float ExtendJumpTimeLimit = 0.2f;

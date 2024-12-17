@@ -50,8 +50,8 @@ namespace BloodWork.Controller
             if (ChangeReference.IsChanged(ref GamePause, UpdatePause()))
                 GameManager.Events.OnGamePause?.Invoke(GamePause);
 
-            if (GameManager.IsGamePaused())
-                return;
+            //if (GameManager.IsGamePaused())
+            //    return;
 
             if (ChangeReference.IsChanged(ref ChangeDirection, UpdateMove()))
                 Entity.Events.OnPerformMove?.Invoke(ChangeDirection);

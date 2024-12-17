@@ -39,7 +39,7 @@ namespace BloodWork.Ability
 
             m_IsActive = true;
             Entity.Events.OnMoveChangeState?.Invoke(new MoveBehaviourStateParams(BehaviourState.Disable));
-            Entity.Events.OnJumpBehaviourStateChange?.Invoke(new JumpBehaviourStateParams(BehaviourState.Disable));
+            Entity.Events.OnJumpBehaviourStateChange?.Invoke(new JumpBehaviourStateParams(BehaviourState.Disable)); //TODO BUG(Maybe feature :)... ) Holding Space and then dashing still makes player go vertical
             StartCoroutine(Cooldown());
         }
 

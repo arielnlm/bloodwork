@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32b41df4ab5457c4ebf44afa91fa786c, type: 3}
   m_Name: Ground Jump
   m_EditorClassIdentifier: 
-  <JumpForce>k__BackingField: 5
+  <JumpForce>k__BackingField: 10
   <ExtendJumpTimeLimit>k__BackingField: 0.1
